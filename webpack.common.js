@@ -7,6 +7,18 @@ module.exports = {
                 exclude: path.resolve(__dirname, 'node_modules'),
                 test: /\.ts$/,
                 use: 'ts-loader'
+            },
+            {
+                exclude: path.resolve(__dirname, 'node_modules'),
+                test: /\.graphql?$/,
+                use: [
+                    {
+                        loader: 'webpack-graphql-loader',
+                        options: {
+                            output: "document"
+                        }
+                    }
+                ]
             }
         ]
     },

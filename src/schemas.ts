@@ -1,3 +1,3 @@
-import {targetSchema} from "./schemas/Target";
+import {DateTimeResolver} from "graphql-scalars";
 
-export default targetSchema
+export default []
