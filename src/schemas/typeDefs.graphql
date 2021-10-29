@@ -2,32 +2,31 @@
 One Target
 """
 type Target{
-    """
-    Target ID
-    """
+
+    """Target ID"""
     id: ID!,
-    """
-    Create Time
-    """
-    creat_at: DateTime!
-    """
-    Name
-    """
+
+    """Create Time"""
+    created_at: DateTime!
+
+    """Target name"""
     name: String!,
-    """
-    Time spent on this target
-    """
+
+    """Time spent on this target"""
     timeSpent: Int!,
-    """
-    Consumption time periods
-    """
-    timePieces(first: Int): Int
+
+    """Consumption time periods"""
+    timePieces(days:[Date]): [timePiece]
+
 }
 
 """
 One Time Piece
 """
 type timePiece{
+    """Piece start time"""
     start: DateTime!,
 
+    """Time spend on this piece, count as seconds"""
+    duration: Int!
 }

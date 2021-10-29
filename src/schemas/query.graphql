@@ -1,3 +1,4 @@
 type Query{
-    test: Target!
+    """Get targets of one user"""
+    targets(user:String!):[Target]
 }
