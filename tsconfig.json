@@ -10,6 +10,8 @@
     "moduleResolution": "node",
     "outDir": "dist",
     "removeComments": true,
+    "allowSyntheticDefaultImports": true,
+    "experimentalDecorators": true,
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
     "strict": true,

@@ -1,0 +1,33 @@
+"""
+One Target
+"""
+type Target{
+    """
+    Target ID
+    """
+    id: ID!,
+    """
+    Create Time
+    """
+    creat_at: DateTime!
+    """
+    Name
+    """
+    name: String!,
+    """
+    Time spent on this target
+    """
+    timeSpent: Int!,
+    """
+    Consumption time periods
+    """
+    timePieces(first: Int): Int
+}
+
+"""
+One Time Piece
+"""
+type timePiece{
+    start: DateTime!,
+
+}

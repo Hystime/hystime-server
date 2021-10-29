@@ -15,7 +15,8 @@ module.exports = {
                     {
                         loader: 'webpack-graphql-loader',
                         options: {
-                            output: "document"
+                            output: "string",
+                            minify: false
                         }
                     }
                 ]
@@ -29,5 +30,5 @@ module.exports = {
     resolve: {
         extensions: ['.ts', '.js']
     },
-    target: 'node'
+    target: 'node',
 };
