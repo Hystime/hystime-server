@@ -1,5 +1,5 @@
-import {RelationOptions} from "typeorm";
+import { RelationOptions } from 'typeorm';
 
-export const preventWildChild:RelationOptions = {
-    orphanedRowAction: "delete"
-}
+export const preventWildChild: RelationOptions = {
+  orphanedRowAction: 'delete',
+};

@@ -1,3 +1,5 @@
+# mapping to inputsType.ts
+
 input UserInput {
     username: String!,
     targets: [TargetInput!]

@@ -1,6 +1,20 @@
-"""
-One Target
-"""
+"""User"""
+type User{
+
+    """User ID"""
+    id: ID!
+
+    """Create Time """
+    created_at: DateTime!
+
+    """Username"""
+    username: String!
+
+    """Targets"""
+    targets: [Target]
+}
+
+"""One Target"""
 type Target{
 
     """Target ID"""

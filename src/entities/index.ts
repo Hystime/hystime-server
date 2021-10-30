@@ -1,5 +1,5 @@
-import {Target} from "./target";
-import {TimePiece} from "./timePiece";
-import {User} from "./user";
+import { Target } from './target';
+import { TimePiece } from './timePiece';
+import { User } from './user';
 
-export default [Target, TimePiece, User]
+export default [Target, TimePiece, User];

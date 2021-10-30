@@ -1,18 +1,18 @@
-import {CreateDateColumn, Entity, OneToMany, PrimaryColumn, PrimaryGeneratedColumn} from "typeorm";
-import {Target} from "./target";
-import {preventWildChild} from "./util";
+import { CreateDateColumn, Entity, OneToMany, PrimaryColumn, PrimaryGeneratedColumn } from 'typeorm';
+import { Target } from './target';
+import { preventWildChild } from './util';
 
 @Entity()
 export class User {
-    @PrimaryGeneratedColumn('uuid')
-    id: string
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
 
-    @PrimaryColumn()
-    username: string
+  @PrimaryColumn()
+  username: string;
 
-    @CreateDateColumn()
-    created_at: Date;
+  @CreateDateColumn()
+  created_at: Date;
 
-    @OneToMany(() => Target, target => target.user,preventWildChild)
-    targets: Target[]
+  @OneToMany(() => Target, (target) => target.user, preventWildChild)
+  targets: Target[];
 }

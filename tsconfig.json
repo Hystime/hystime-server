@@ -11,6 +11,7 @@
     "outDir": "dist",
     "removeComments": true,
     "allowSyntheticDefaultImports": true,
+    "noImplicitReturns": true,
     "declaration": true,
     "declarationMap": true,
     "inlineSourceMap": true,

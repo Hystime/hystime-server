@@ -1,23 +1,23 @@
-import {Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn} from "typeorm";
-import {Target} from "./target";
+import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { Target } from './target';
 
-type PieceType = "normal" | "pomodoro"
+type PieceType = 'normal' | 'pomodoro';
 
 @Entity()
 export class TimePiece {
-    @PrimaryGeneratedColumn()
-    id: number;
+  @PrimaryGeneratedColumn()
+  id: number;
 
-    @ManyToOne(()=>Target,target=>target.timePieces)
-    @JoinColumn()
-    target: Target;
+  @ManyToOne(() => Target, (target) => target.timePieces)
+  @JoinColumn()
+  target: Target;
 
-    @Column()
-    start: Date;
+  @Column()
+  start: Date;
 
-    @Column()
-    duration: number;
+  @Column()
+  duration: number;
 
-    @Column("text")
-    type: PieceType;
+  @Column('text')
+  type: PieceType;
 }

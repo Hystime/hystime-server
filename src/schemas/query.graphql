@@ -1,4 +1,4 @@
 type Query{
-    """Get targets of one user"""
-    targets(user:String!):[Target]
+    """Try to find one user"""
+    user(username:String!):User
 }
