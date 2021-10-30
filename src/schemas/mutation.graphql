@@ -1,10 +1,10 @@
 type Mutation{
     """Add a user"""
-    addUser(input:UserInput!): Boolean
+    createUser(input:UserInput!): Boolean
 
     """Add a target for particual target"""
     addTarget(user:String!,input:TargetInput!): Boolean
 
     """Add timePieces for particular target"""
-    addTimePieces(target_id:String!,input:[TimePieceInput!]): Boolean
+    addTimePieces(target_id:String!,input:[TimePieceInput!]!): Boolean
 }

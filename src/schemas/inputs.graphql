@@ -13,5 +13,6 @@ input TargetInput {
 
 input TimePieceInput {
     start: DateTime!,
-    duration: Int!
+    duration: Int!,
+    type: String!
 }

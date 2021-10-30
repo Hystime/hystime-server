@@ -1,29 +1,20 @@
-import { TargetInput, TimePieceInput, UserInput } from '../types/inputsType';
-
-type addUserArgsType = {
-  input: UserInput;
-};
-type addTargetArgsType = {
-  user: string;
-  input: TargetInput;
-};
-type addTimePiecesArgsType = {
-  target_id: string;
-  input: TimePieceInput[];
-};
+import { MutationTargetInput, MutationTimePieceInput, MutationUserInput } from '../types/inputsType';
+import { Db } from '../db/db';
+import { MutationAddTargetArgsType, MutationAddTimePiecesArgsType, MutationAddUserArgsType } from '../types/argsType';
 
 export const mutationResolver = {
   Mutation: {
-    addUser: async (parent: any, args: addUserArgsType, context: any, info: any): Promise<boolean> => {
+    createUser: async (parent: any, args: MutationAddUserArgsType, context: any, info: any): Promise<boolean> => {
       const { input } = args;
-      const username = input.username;
-      return true;
+      return await Db.createUser(input);
     },
-    addTarget: async (parent: any, args: addTargetArgsType, context: any, info: any): Promise<boolean> => {
-      return true;
+    addTarget: async (parent: any, args: MutationAddTargetArgsType, context: any, info: any): Promise<boolean> => {
+      const { user, input } = args;
+      return (await Db.addTarget(user, input)) as boolean;
     },
-    addTimePieces: async (parent: any, args: addTimePiecesArgsType, context: any, info: any): Promise<boolean> => {
-      return true;
+    addTimePieces: async (parent: any, args: MutationAddTimePiecesArgsType, context: any, info: any): Promise<boolean> => {
+      const { target_id, input } = args;
+      return (await Db.addTimePieces(target_id, input)) as boolean;
     },
   },
 };

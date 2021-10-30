@@ -7,9 +7,8 @@ import schemas from './schemas';
 import entities from './entities';
 
 import * as fs from 'fs';
-import { Db } from './db/db';
 
-async function start() {
+async function start(): Promise<void> {
   const tokenPath = '.token';
   let token: string;
 
@@ -32,7 +31,7 @@ async function start() {
       host: 'localhost',
       port: 3306,
       username: 'root',
-      password: 'pw',
+      password: '123456',
       database: 'hystime',
       synchronize: true,
       entities: entities,

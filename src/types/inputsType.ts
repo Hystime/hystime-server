@@ -1,17 +1,18 @@
 // mapping from inputs.graphql
 
-export type UserInput = {
+export type MutationUserInput = {
   username: string;
-  targets: TargetInput[];
+  targets: MutationTargetInput[];
 };
 
-export type TargetInput = {
+export type MutationTargetInput = {
   name: string;
   timeSpent?: number;
-  timePieces: TimePieceInput[];
+  timePieces: MutationTimePieceInput[];
 };
 
-export type TimePieceInput = {
+export type MutationTimePieceInput = {
   start: Date;
   duration: number;
+  type: 'normal' | 'pomodoro';
 };
