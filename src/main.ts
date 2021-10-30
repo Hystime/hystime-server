@@ -2,8 +2,8 @@ import {ApolloServer, AuthenticationError} from 'apollo-server';
 import {ConnectionOptions, createConnection} from "typeorm";
 import {nanoid} from 'nanoid'
 
-import resolver from './resolver';
-import schemas from './schema';
+import resolver from './resolvers';
+import schemas from './schemas';
 import entities from './entities'
 
 import * as fs from "fs";
@@ -34,6 +34,7 @@ async function start() {
             username: "root",
             password: "123456",
             database: "hystime",
+            synchronize: true,
             entities: entities
         }
     } else {
@@ -44,7 +45,9 @@ async function start() {
             port: Number(process.env["DB_PORT"]) || 3306,
             username: process.env["DB_USERNAME"],
             password: process.env["DB_USERPWD"],
-            database: process.env["DB_NAME"]
+            database: process.env["DB_NAME"],
+            synchronize: true,
+            entities: entities
         }
     }
 
@@ -54,10 +57,12 @@ async function start() {
             typeDefs: schemas,
             resolvers: resolver,
             context: ({req}) => {
-                const userToken = req.headers.auth || '';
+                const userToken = req.headers.Auth || '';
 
-                if (userToken !== token)
-                    throw new AuthenticationError('Incorrect access token');
+                if (process.env.NODE_ENV === 'production') {
+                    if (userToken !== token)
+                        throw new AuthenticationError('Incorrect access token');
+                }
             },
         }
     );

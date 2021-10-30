@@ -1,0 +1,15 @@
+input UserInput {
+    username: String!,
+    targets: [TargetInput!]
+}
+
+input TargetInput {
+    name: String!,
+    timeSpent: Int,
+    timePieces: [TimePieceInput!]
+}
+
+input TimePieceInput {
+    start: DateTime!,
+    duration: Int!
+}

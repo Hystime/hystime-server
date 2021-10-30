@@ -3,28 +3,28 @@ import {TimePiece} from "../entities/timePiece";
 
 export const targetResolver = {
     Target: {
-        id: async (root: Target, args: any, context: any, info: any) => {
-            return root.id;
+        id: async (parent: Target, args: any, context: any, info: any) => {
+            return parent.id;
         },
-        created_at: async (root: Target, args: any, context: any, info: any) => {
-            return root.created_at;
+        created_at: async (parent: Target, args: any, context: any, info: any) => {
+            return parent.created_at;
         },
-        name: async (root: Target, args: any, context: any, info: any) => {
-            return root.name
+        name: async (parent: Target, args: any, context: any, info: any) => {
+            return parent.name
         },
-        timeSpent: async (root: Target, args: any, context: any, info: any) => {
-            return root.timeSpent;
+        timeSpent: async (parent: Target, args: any, context: any, info: any) => {
+            return parent.timeSpent;
         },
-        timePieces: async (root: Target, args: any, context: any, info: any) => {
-            return [];
+        timePieces: async (parent: Target, args: any, context: any, info: any) => {
+            return parent.timePieces;
         },
     },
-    timePiece: {
-        start: async (root: TimePiece, args: any, context: any, info: any) => {
-            return root.start;
+    TimePiece: {
+        start: async (parent: TimePiece, args: any, context: any, info: any) => {
+            return parent.start;
         },
-        duration: async (root: TimePiece, args: any, context: any, info: any) => {
-            return root.duration;
+        duration: async (parent: TimePiece, args: any, context: any, info: any) => {
+            return parent.duration;
         },
     }
 }

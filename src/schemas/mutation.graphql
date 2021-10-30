@@ -1,0 +1,8 @@
+type Mutation{
+
+    addUser(input:UserInput!): Void
+
+    addTarget(user:String!,input:TargetInput!): Void
+
+    addTimePiece(target_id:String!,input:TimePieceInput!): Void
+}

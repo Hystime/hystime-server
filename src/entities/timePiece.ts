@@ -1,4 +1,4 @@
-import {Column, Entity, ManyToOne, PrimaryGeneratedColumn} from "typeorm";
+import {Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn} from "typeorm";
 import {Target} from "./target";
 
 type PieceType = "normal" | "pomodoro"
@@ -9,6 +9,7 @@ export class TimePiece {
     id: number;
 
     @ManyToOne(()=>Target,target=>target.timePieces)
+    @JoinColumn()
     target: Target;
 
     @Column()

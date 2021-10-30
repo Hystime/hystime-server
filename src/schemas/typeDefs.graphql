@@ -16,14 +16,14 @@ type Target{
     timeSpent: Int!,
 
     """Consumption time periods"""
-    timePieces(days:[Date]): [timePiece]
+    timePieces(days:[Date]): [TimePiece]
 
 }
 
 """
 One Time Piece
 """
-type timePiece{
+type TimePiece{
     """Piece start time"""
     start: DateTime!,
 
