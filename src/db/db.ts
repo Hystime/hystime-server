@@ -31,7 +31,7 @@ export class Db {
     user.username = input.username;
     const targets: Target[] = [];
     for (const targetInput of targets) {
-      targets.push((await this.addTarget(user, targetInput)) as Target);
+      targets.push(await this.addTarget(user, targetInput));
     }
     user.targets = targets;
 
@@ -39,12 +39,14 @@ export class Db {
     return true;
   }
 
+  public static async addTarget(user: string, input: MutationTargetInput): Promise<boolean>;
+  public static async addTarget(user: User, input: MutationTargetInput): Promise<Target>;
   public static async addTarget(user: string | User, input: MutationTargetInput): Promise<boolean | Target> {
     const calledByMutation = typeof user === 'string';
     const userRepo = getConnection().getRepository(User);
 
-    if (calledByMutation) {
-      const ret = await userRepo.findOne({ username: user as string });
+    if (typeof user === 'string') {
+      const ret = await userRepo.findOne({ username: user });
       if (ret === undefined) return false;
       user = ret;
     }
@@ -55,7 +57,7 @@ export class Db {
     target.user = user;
     target.name = input.name;
     target.timeSpent = input.timeSpent || 0;
-    target.timePieces = input.timePieces ? ((await this.addTimePieces(target, input.timePieces)) as TimePiece[]) : [];
+    target.timePieces = input.timePieces ? await this.addTimePieces(target, input.timePieces) : [];
 
     if (calledByMutation) {
       if (user.targets === undefined) {
@@ -68,13 +70,50 @@ export class Db {
     return target;
   }
 
+  public static async addTimePiece(target: string, input: MutationTimePieceInput): Promise<boolean>;
+  public static async addTimePiece(target: Target, input: MutationTimePieceInput): Promise<TimePiece>;
+  public static async addTimePiece(target: string | Target, input: MutationTimePieceInput): Promise<boolean | TimePiece> {
+    const calledByMutation = typeof target === 'string';
+    const targetRepo = getConnection().getRepository(Target);
+
+    if (typeof target === 'string') {
+      const ret = await targetRepo.findOne({ id: target });
+      if (ret === undefined) return false;
+      target = ret;
+    }
+
+    assert<Target>(target);
+
+    const timePiece = new TimePiece();
+    timePiece.target = target;
+    timePiece.start = input.start;
+    timePiece.duration = input.duration;
+    if (!['normal', 'pomodoro'].includes(input.type)) {
+      throw new Error(`Unacceptable piece type ${input.type}`);
+    }
+    timePiece.type = input.type;
+
+    if (calledByMutation) {
+      if (target.timePieces === undefined) {
+        target.timePieces = [];
+      }
+      target.timePieces.push(timePiece);
+      await targetRepo.save(target);
+      return true;
+    }
+    return timePiece;
+  }
+
+  public static async addTimePieces(target: string, inputs: MutationTimePieceInput[]): Promise<boolean>;
+  public static async addTimePieces(target: Target, inputs: MutationTimePieceInput[]): Promise<TimePiece[]>;
   public static async addTimePieces(target: string | Target, inputs: MutationTimePieceInput[]): Promise<boolean | TimePiece[]> {
     const calledByMutation = typeof target === 'string';
     const timePieces: TimePiece[] = [];
+
     const targetRepo = getConnection().getRepository(Target);
 
-    if (calledByMutation) {
-      const ret = await targetRepo.findOne({ id: target as string });
+    if (typeof target === 'string') {
+      const ret = await targetRepo.findOne({ id: target });
       if (ret === undefined) return false;
       target = ret;
     }
@@ -82,16 +121,7 @@ export class Db {
     assert<Target>(target);
 
     for (const input of inputs) {
-      // FIXME: Same time piece can be added multi times.
-      const timePiece = new TimePiece();
-      timePiece.target = target;
-      timePiece.start = input.start;
-      timePiece.duration = input.duration;
-      if (!['normal', 'pomodoro'].includes(input.type)) {
-        throw new Error(`Unacceptable piece type ${input.type}`);
-      }
-      timePiece.type = input.type;
-      timePieces.push(timePiece);
+      timePieces.push(await this.addTimePiece(target, input));
     }
 
     if (calledByMutation) {
@@ -102,6 +132,7 @@ export class Db {
       await targetRepo.save(target);
       return true;
     }
+
     return timePieces;
   }
 }

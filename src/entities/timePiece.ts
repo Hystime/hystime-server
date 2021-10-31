@@ -1,4 +1,4 @@
-import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, JoinColumn, ManyToOne, PrimaryColumn, PrimaryGeneratedColumn } from 'typeorm';
 import { Target } from './target';
 
 type PieceType = 'normal' | 'pomodoro';
@@ -12,7 +12,7 @@ export class TimePiece {
   @JoinColumn()
   target: Target;
 
-  @Column()
+  @PrimaryColumn()
   start: Date;
 
   @Column()
