@@ -99,11 +99,7 @@ export class Db {
     timePiece.type = input.type;
 
     if (calledByMutation) {
-      if (target.timePieces === undefined) {
-        target.timePieces = [];
-      }
-      target.timePieces.push(timePiece);
-      await targetRepo.save(target);
+      await timePieceRepo.save(timePiece);
       return true;
     }
     return timePiece;
@@ -116,6 +112,7 @@ export class Db {
     const timePieces: TimePiece[] = [];
 
     const targetRepo = getConnection().getRepository(Target);
+    const timePieceRepo = getConnection().getRepository(TimePiece);
 
     if (typeof target === 'string') {
       const ret = await targetRepo.findOne({ id: target });
@@ -131,12 +128,7 @@ export class Db {
     }
 
     if (calledByMutation) {
-      if (target.timePieces === undefined) {
-        target.timePieces = [];
-      }
-      target.timePieces.push(...timePieces);
-      await targetRepo.save(target);
-      console.log('a');
+      await timePieceRepo.save(timePieces);
       return timePieces.length === inputs.length;
     }
 
