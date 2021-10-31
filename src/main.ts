@@ -68,9 +68,4 @@ async function start(): Promise<void> {
   console.log(`Server ready at ${serverInfo.url}. `);
 }
 
-if (module.hot) {
-  module.hot.accept();
-  module.hot.dispose(() => console.log('Module disposed. '));
-}
-
 start();

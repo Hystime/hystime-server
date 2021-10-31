@@ -87,8 +87,7 @@ export class Db {
 
     const timePieceRepo = getConnection().getRepository(TimePiece);
     const ret = await timePieceRepo.findOne({ start: input.start });
-    if (ret !== undefined) {
-    }
+    if (ret !== undefined) return calledByMutation ? false : null;
 
     const timePiece = new TimePiece();
     timePiece.target = target;
@@ -137,7 +136,8 @@ export class Db {
       }
       target.timePieces.push(...timePieces);
       await targetRepo.save(target);
-      return true;
+      console.log('a');
+      return timePieces.length === inputs.length;
     }
 
     return timePieces;
