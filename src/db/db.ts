@@ -31,7 +31,8 @@ export class Db {
     user.username = input.username;
     const targets: Target[] = [];
     for (const targetInput of targets) {
-      targets.push(await this.addTarget(user, targetInput));
+      const target = await this.addTarget(user, targetInput);
+      if (target !== null) targets.push(target);
     }
     user.targets = targets;
 
@@ -40,14 +41,14 @@ export class Db {
   }
 
   public static async addTarget(user: string, input: MutationTargetInput): Promise<boolean>;
-  public static async addTarget(user: User, input: MutationTargetInput): Promise<Target>;
-  public static async addTarget(user: string | User, input: MutationTargetInput): Promise<boolean | Target> {
+  public static async addTarget(user: User, input: MutationTargetInput): Promise<Target | null>;
+  public static async addTarget(user: string | User, input: MutationTargetInput): Promise<boolean | Target | null> {
     const calledByMutation = typeof user === 'string';
     const userRepo = getConnection().getRepository(User);
 
     if (typeof user === 'string') {
       const ret = await userRepo.findOne({ username: user });
-      if (ret === undefined) return false;
+      if (ret === undefined) return calledByMutation ? false : null;
       user = ret;
     }
 
@@ -71,18 +72,23 @@ export class Db {
   }
 
   public static async addTimePiece(target: string, input: MutationTimePieceInput): Promise<boolean>;
-  public static async addTimePiece(target: Target, input: MutationTimePieceInput): Promise<TimePiece>;
-  public static async addTimePiece(target: string | Target, input: MutationTimePieceInput): Promise<boolean | TimePiece> {
+  public static async addTimePiece(target: Target, input: MutationTimePieceInput): Promise<TimePiece | null>;
+  public static async addTimePiece(target: string | Target, input: MutationTimePieceInput): Promise<boolean | TimePiece | null> {
     const calledByMutation = typeof target === 'string';
     const targetRepo = getConnection().getRepository(Target);
 
     if (typeof target === 'string') {
       const ret = await targetRepo.findOne({ id: target });
-      if (ret === undefined) return false;
+      if (ret === undefined) return calledByMutation ? false : null;
       target = ret;
     }
 
     assert<Target>(target);
+
+    const timePieceRepo = getConnection().getRepository(TimePiece);
+    const ret = await timePieceRepo.findOne({ start: input.start });
+    if (ret !== undefined) {
+    }
 
     const timePiece = new TimePiece();
     timePiece.target = target;
@@ -121,7 +127,8 @@ export class Db {
     assert<Target>(target);
 
     for (const input of inputs) {
-      timePieces.push(await this.addTimePiece(target, input));
+      const timePiece = await this.addTimePiece(target, input);
+      if (timePiece !== null) timePieces.push(timePiece);
     }
 
     if (calledByMutation) {

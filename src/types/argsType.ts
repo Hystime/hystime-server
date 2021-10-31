@@ -7,6 +7,10 @@ export type MutationAddTargetArgsType = {
   user: string;
   input: MutationTargetInput;
 };
+export type MutationAddTimePieceArgsType = {
+  target_id: string;
+  input: MutationTimePieceInput;
+};
 export type MutationAddTimePiecesArgsType = {
   target_id: string;
   input: MutationTimePieceInput[];

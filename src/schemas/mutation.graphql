@@ -5,6 +5,9 @@ type Mutation{
     """Add a target for particual target"""
     addTarget(user:String!,input:TargetInput!): Boolean
 
+    """Add timePiece for particular target"""
+    addTimePiece(target_id:String!,input:TimePieceInput!): Boolean
+
     """Add timePieces for particular target"""
     addTimePieces(target_id:String!,input:[TimePieceInput!]!): Boolean
 }
