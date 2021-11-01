@@ -3,7 +3,7 @@ import { User } from '../entities/user';
 import { MutationTargetInput, MutationTimePieceInput, MutationUserInput } from '../types/inputsType';
 import { Target } from '../entities/target';
 import { TimePiece } from '../entities/timePiece';
-import { assert } from '../utils';
+import { assert, assertNonNull } from '../utils';
 
 export class Db {
   public static async getUser(username: string): Promise<User | null> {
@@ -24,17 +24,21 @@ export class Db {
   }
 
   public static async createUser(input: MutationUserInput): Promise<boolean> {
+    assertNonNull(input.username);
+
     if ((await this.checkUser(input.username)) !== undefined) {
       return false;
     }
     const user = new User();
     user.username = input.username;
     const targets: Target[] = [];
-    for (const targetInput of targets) {
-      const target = await this.addTarget(user, targetInput);
-      if (target !== null) targets.push(target);
+    if (input.targets !== undefined) {
+      for (const targetInput of input.targets) {
+        const target = await this.addTarget(user, targetInput);
+        if (target !== null) targets.push(target);
+      }
+      user.targets = targets;
     }
-    user.targets = targets;
 
     await getConnection().manager.save(user);
     return true;
@@ -43,6 +47,8 @@ export class Db {
   public static async addTarget(user: string, input: MutationTargetInput): Promise<boolean>;
   public static async addTarget(user: User, input: MutationTargetInput): Promise<Target | null>;
   public static async addTarget(user: string | User, input: MutationTargetInput): Promise<boolean | Target | null> {
+    assertNonNull(input.name);
+
     const calledByMutation = typeof user === 'string';
     const userRepo = getConnection().getRepository(User);
 
@@ -58,7 +64,9 @@ export class Db {
     target.user = user;
     target.name = input.name;
     target.timeSpent = input.timeSpent || 0;
-    target.timePieces = input.timePieces ? await this.addTimePieces(target, input.timePieces) : [];
+    if (input.timePieces !== undefined) {
+      target.timePieces = await this.addTimePieces(target, input.timePieces);
+    }
 
     if (calledByMutation) {
       if (user.targets === undefined) {
@@ -74,6 +82,9 @@ export class Db {
   public static async addTimePiece(target: string, input: MutationTimePieceInput): Promise<boolean>;
   public static async addTimePiece(target: Target, input: MutationTimePieceInput): Promise<TimePiece | null>;
   public static async addTimePiece(target: string | Target, input: MutationTimePieceInput): Promise<boolean | TimePiece | null> {
+    assertNonNull(input.start);
+    assertNonNull(input.duration);
+
     const calledByMutation = typeof target === 'string';
     const targetRepo = getConnection().getRepository(Target);
 
@@ -93,10 +104,14 @@ export class Db {
     timePiece.target = target;
     timePiece.start = input.start;
     timePiece.duration = input.duration;
-    if (!['normal', 'pomodoro'].includes(input.type)) {
-      throw new Error(`Unacceptable piece type ${input.type}`);
+    if (input.type !== undefined) {
+      if (!['normal', 'pomodoro'].includes(input.type)) {
+        throw new Error(`Unacceptable piece type ${input.type}`);
+      }
+      timePiece.type = input.type;
+    } else {
+      timePiece.type = 'normal';
     }
-    timePiece.type = input.type;
 
     if (calledByMutation) {
       await timePieceRepo.save(timePiece);

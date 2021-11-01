@@ -1,5 +1,4 @@
 import { getConnection } from 'typeorm';
-import { User } from '../entities/user';
 import { QueryUserArgsType } from '../types/argsType';
 import { Db } from '../db/db';
 
