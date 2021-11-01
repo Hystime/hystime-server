@@ -23,7 +23,7 @@ module.exports = {
       },
     ],
   },
-  devtool: 'source-map',
+  devtool: 'inline-source-map',
   output: {
     filename: 'server.js',
     path: path.resolve(__dirname, 'dist'),

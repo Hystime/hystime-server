@@ -14,7 +14,7 @@
     "noImplicitReturns": true,
     "declaration": true,
     "declarationMap": true,
-    "inlineSourceMap": true,
+    "sourceMap": true,
     "inlineSources": true,
     "strictPropertyInitialization": false,
     "emitDecoratorMetadata": true,
