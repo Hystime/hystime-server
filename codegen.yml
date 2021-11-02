@@ -1,9 +1,12 @@
 overwrite: true
 schema:
-  - "./src/schemas/ref/*.graphql"
+  - "./src/schemas/ref/scalars.ts"
   - "./src/schemas/schema/*.graphql"
 require:
   - ts-node/register
+hooks:
+  afterAllFileWrite:
+    - eslint --fix
 generates:
   src/generated/graphql.ts:
     config:

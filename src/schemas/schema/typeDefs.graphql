@@ -34,7 +34,7 @@ type Target implements Node{
     timeSpent: Int!,
 
     """Consumption time periods"""
-    timePieces(days:[Date]): [TimePiece]
+    timePieces(days:[DateTime]): [TimePiece]
 
 }
 

@@ -1,4 +1,4 @@
-# This file is copied from graphql-scalar, used for auto-completion.
+# This file is copied from graphql-scalar v1.12.0, may missed some type, only used for auto-completion.
 # Won't be compiled.
 
 scalar BigInt
