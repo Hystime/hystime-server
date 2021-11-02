@@ -1,5 +1,9 @@
+interface Node{
+    id: ID!
+}
+
 """User"""
-type User{
+type User implements Node{
 
     """User ID"""
     id: ID!
@@ -15,7 +19,7 @@ type User{
 }
 
 """One Target"""
-type Target{
+type Target implements Node{
 
     """Target ID"""
     id: ID!,
@@ -38,6 +42,9 @@ type Target{
 One Time Piece
 """
 type TimePiece{
+    """Time Piece ID"""
+    id: ID!
+
     """Piece start time"""
     start: DateTime!,
 

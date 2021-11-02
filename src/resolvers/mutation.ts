@@ -30,6 +30,6 @@ export const mutationResolver = {
         necessary(mutationTimePieceInput, 'start', 'duration');
       }
       return await Db.addTimePieces(target_id, input);
-    }
-  }
+    },
+  },
 };

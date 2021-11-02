@@ -1,31 +1,35 @@
 # mapping to inputsType.ts
 
-input AddUserInput {
+input UserCreateInput {
     username: String!,
-    targets: [AddTargetInput!]
+    targets: [TargetCreateInput!]
 }
 
-input AddTargetInput {
+input UserUpdateInput {
+    username: String
+}
+
+input TargetCreateInput {
+    user_id: ID!,
     name: String!,
     timeSpent: Int,
     type: String,
-    timePieces: [AddTimePieceInput!]
+    timePieces: [TimePieceCreateInput!]
 }
 
-input UpdateTargetInput {
+input TargetUpdateInput {
     name: String,
     timeSpent: Int,
     type: String,
-    timePieces: [AddTimePieceInput!]
 }
 
-input AddTimePieceInput {
+input TimePieceCreateInput {
     start: DateTime!,
     duration: Int!,
     type: String
 }
 
-input UpdateTimePieceInput {
+input TimePieceUpdateInput {
     start: DateTime,
     duration: Int,
     type: String
