@@ -1,3 +1,6 @@
-import { DateTimeTypeDefinition, DateTypeDefinition } from 'graphql-scalars';
+import { GraphQLDate, GraphQLDateTime } from 'graphql-scalars';
+import { GraphQLSchema } from 'graphql';
 
-export default DateTimeTypeDefinition;
+export default new GraphQLSchema({
+  types: [GraphQLDate, GraphQLDateTime],
+});
