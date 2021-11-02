@@ -1,0 +1,17 @@
+overwrite: true
+schema:
+  - "./src/schemas/ref/*.graphql"
+  - "./src/schemas/schema/*.graphql"
+require:
+  - ts-node/register
+generates:
+  src/generated/graphql.ts:
+    config:
+      useIndexSignature: true
+    plugins:
+      - "typescript"
+      - "typescript-resolvers"
+      - "typescript-document-nodes"
+  ./graphql.schema.json:
+    plugins:
+      - "introspection"

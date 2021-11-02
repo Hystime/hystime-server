@@ -83,3 +83,5 @@ dist
 .pnp.*
 
 .token
+graphql.schema.json
+src/generated
