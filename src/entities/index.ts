@@ -1,5 +1,5 @@
-import { Target } from './target';
-import { TimePiece } from './timePiece';
-import { User } from './user';
+import { TargetEntity } from './target';
+import { TimePieceEntity } from './timePiece';
+import { UserEntity } from './user';
 
-export default [Target, TimePiece, User];
+export default [TargetEntity, TimePieceEntity, UserEntity];

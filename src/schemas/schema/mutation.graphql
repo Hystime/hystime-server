@@ -1,15 +1,15 @@
 type Mutation{
     """Add a user"""
-    userCreate(input:UserCreateInput!): Boolean
+    userCreate(input:UserCreateInput!): User
 
     """Update a user"""
-    userUpdate(user_id:ID!,input:UserUpdateInput!): Boolean
+    userUpdate(user_id:ID!,input:UserUpdateInput!): User
 
     """Add a target"""
     targetCreate(input:TargetCreateInput!): Target
 
     """Update a target"""
-    targetUpdate(target_id:ID!,input:TargetCreateInput): Target
+    targetUpdate(target_id:ID!,input:TargetCreateInput!): Target
 
     """Delete a target"""
     targetDelete(target_id:ID!): Boolean
@@ -18,11 +18,11 @@ type Mutation{
     timePieceCreate(target_id:String!,input:TimePieceCreateInput!): TimePiece
 
     """Update a timePiece"""
-    timePieceUpdate(timepiece_id:ID!,input:TimePieceUpdateInput!): TimePiece
+    timePieceUpdate(timepiece_id:Int!,input:TimePieceUpdateInput!): TimePiece
 
     """Delete a timePiece"""
-    timePieceDelete(timepiece_id:ID!): Boolean
+    timePieceDelete(timepiece_id:Int!): Boolean
 
     """Add timePieces for particular target"""
-    timePiecesCreate(target_id:String!,input:[TimePieceCreateInput!]!): Boolean
+    timePiecesCreateForTarget(target_id:String!,input:[TimePieceCreateInput!]!): [TimePiece]
 }

@@ -1,16 +1,14 @@
 import { Column, Entity, JoinColumn, ManyToOne, PrimaryColumn, PrimaryGeneratedColumn } from 'typeorm';
-import { Target } from './target';
-
-type PieceType = 'normal' | 'pomodoro';
+import { TargetEntity } from './target';
 
 @Entity()
-export class TimePiece {
+export class TimePieceEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @ManyToOne(() => Target, (target) => target.timePieces)
+  @ManyToOne(() => TargetEntity, (target) => target.timePieces)
   @JoinColumn()
-  target: Target;
+  target: TargetEntity;
 
   @PrimaryColumn()
   start: Date;
@@ -18,6 +16,6 @@ export class TimePiece {
   @Column()
   duration: number;
 
-  @Column('text')
-  type: PieceType;
+  @Column()
+  type: string;
 }

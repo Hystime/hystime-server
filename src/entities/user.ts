@@ -1,9 +1,9 @@
 import { Column, CreateDateColumn, Entity, OneToMany, PrimaryColumn, PrimaryGeneratedColumn } from 'typeorm';
-import { Target } from './target';
+import { TargetEntity } from './target';
 import { preventWildChild } from './util';
 
 @Entity()
-export class User {
+export class UserEntity {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
@@ -13,6 +13,6 @@ export class User {
   @CreateDateColumn()
   created_at: Date;
 
-  @OneToMany(() => Target, (target) => target.user, preventWildChild)
-  targets: Target[];
+  @OneToMany(() => TargetEntity, (target) => target.user, preventWildChild)
+  targets: TargetEntity[];
 }

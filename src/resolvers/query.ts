@@ -1,11 +1,9 @@
-import { getConnection } from 'typeorm';
-import { QueryUserArgsType } from '../types/argsType';
 import { Db } from '../db/db';
+import { QueryResolvers, User } from '../generated/types';
 
-export const queryResolvers = {
-  Query: {
-    user: async (parent: any, args: QueryUserArgsType, context: any, info: any) => {
-      return await Db.getUser(args.username);
-    },
+export const Query: QueryResolvers = {
+  user: async (parent: any, args, context, info: any): Promise<User | null> => {
+    const { username } = args;
+    return await Db.getUser(username);
   },
 };

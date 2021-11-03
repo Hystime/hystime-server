@@ -1,9 +1,7 @@
-interface Node{
-    id: ID!
-}
+
 
 """User"""
-type User implements Node{
+type User{
 
     """User ID"""
     id: ID!
@@ -15,11 +13,11 @@ type User implements Node{
     username: String!
 
     """Targets"""
-    targets: [Target]
+    targets: [Target!]
 }
 
 """One Target"""
-type Target implements Node{
+type Target{
 
     """Target ID"""
     id: ID!,
@@ -34,7 +32,7 @@ type Target implements Node{
     timeSpent: Int!,
 
     """Consumption time periods"""
-    timePieces(days:[DateTime]): [TimePiece]
+    timePieces(days:[DateTime]): [TimePiece!]
 
 }
 
@@ -42,8 +40,8 @@ type Target implements Node{
 One Time Piece
 """
 type TimePiece{
-    """Time Piece ID"""
-    id: ID!
+    """TimePiece ID"""
+    id: Int!,
 
     """Piece start time"""
     start: DateTime!,

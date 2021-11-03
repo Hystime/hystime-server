@@ -1,16 +1,16 @@
 import { Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
-import { TimePiece } from './timePiece';
-import { User } from './user';
+import { TimePieceEntity } from './timePiece';
+import { UserEntity } from './user';
 import { preventWildChild } from './util';
 
 @Entity()
-export class Target {
+export class TargetEntity {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @ManyToOne(() => User, (user) => user.targets)
+  @ManyToOne(() => UserEntity, (user) => user.targets)
   @JoinColumn()
-  user: User;
+  user: UserEntity;
 
   @CreateDateColumn()
   created_at: Date;
@@ -21,6 +21,6 @@ export class Target {
   @Column()
   timeSpent: number;
 
-  @OneToMany(() => TimePiece, (timePiece) => timePiece.target, preventWildChild)
-  timePieces: TimePiece[];
+  @OneToMany(() => TimePieceEntity, (timePiece) => timePiece.target, preventWildChild)
+  timePieces: TimePieceEntity[];
 }
