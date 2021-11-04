@@ -4,7 +4,6 @@ import {
   GraphQLCurrency,
   GraphQLDate,
   GraphQLDateTime,
-  GraphQLDID,
   GraphQLEmailAddress,
   GraphQLGUID,
   GraphQLHexadecimal,
@@ -109,6 +108,5 @@ export default new GraphQLSchema({
     GraphQLIBAN,
     GraphQLObjectID,
     GraphQLVoid,
-    GraphQLDID,
   ],
 });

@@ -2,7 +2,7 @@ import { Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, OneToMany, Pri
 import { TimePieceEntity } from './timePiece';
 import { UserEntity } from './user';
 import { preventWildChild } from './util';
-import { TargetType } from "../generated/types";
+import { TargetType } from '../generated/types';
 
 @Entity({ name: 'target' })
 export class TargetEntity {

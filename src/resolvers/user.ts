@@ -1,4 +1,3 @@
-import { UserEntity } from '../entities/user';
 import { UserResolvers } from '../generated/types';
 
 export const User: UserResolvers = {

@@ -3320,10 +3320,10 @@ graphql-request@^3.3.0:
     extract-files "^9.0.0"
     form-data "^3.0.0"
 
-graphql-scalars@^1.13.1:
-  version "1.13.1"
-  resolved "https://registry.npmjs.org/graphql-scalars/-/graphql-scalars-1.13.1.tgz#564828af796d7a31e1895f8bbb912bad70c977d1"
-  integrity sha512-FGMQqY+X/AQ+WV77eSNspZqU9q/Q4mIZMeo8xsLWGgbOpIHlxWuWq3fVzbgo2XKOC+wXT1CJupY1PGU2PtzFCg==
+graphql-scalars@1.12.0:
+  version "1.12.0"
+  resolved "https://registry.npmjs.org/graphql-scalars/-/graphql-scalars-1.12.0.tgz#87f93708a41a3f3af8a6f1437a1c056c8c70f27e"
+  integrity sha512-/SIT+GwEPP67x0ftOxSyZq5dZlAoK3rHKaTisAcUK2hWaTKJyE0lT0TJu2mzOMFAjxQV01pEH+w+dtMBOmPDgA==
   dependencies:
     tslib "~2.3.0"
 
@@ -3359,9 +3359,9 @@ graphql@^0.13.1:
     iterall "^1.2.1"
 
 graphql@^15.7.1:
-  version "15.7.1"
-  resolved "https://registry.npmjs.org/graphql/-/graphql-15.7.1.tgz#c821a1741e04e2bc2c91e138f34c06a86c0464f1"
-  integrity sha512-x34S6gC0/peBZnlK60zCJox/d45A7p6At9oN9EPA3qhoIAlR4LNZmXRLkICBckwwTMJzVdA8cx3QIQZMOl606A==
+  version "15.7.2"
+  resolved "https://registry.npmjs.org/graphql/-/graphql-15.7.2.tgz#85ab0eeb83722977151b3feb4d631b5f2ab287ef"
+  integrity sha512-AnnKk7hFQFmU/2I9YSQf3xw44ctnSFCfp3zE0N6W174gqe9fWG/2rKaKxROK7CcI3XtERpjEKFqts8o319Kf7A==
 
 has-ansi@^2.0.0:
   version "2.0.0"
@@ -4505,6 +4505,11 @@ onetime@^5.1.0, onetime@^5.1.2:
   integrity sha512-kbpaSSGJTWdAY5KPVeMOKXSrPtr8C8C7wodJbcsd51jRnmD+GZu8Y0VoU6Dm5Z4vWr0Ig/1NKuWRKf7j5aaYSg==
   dependencies:
     mimic-fn "^2.1.0"
+
+opaqueid@^1.2.0:
+  version "1.2.0"
+  resolved "https://registry.npmjs.org/opaqueid/-/opaqueid-1.2.0.tgz#a5df33ca0ad8b7b6eefff8525816383b32a7c37f"
+  integrity sha512-menEBQyyfilIvDGJVHPp/y++jz2naZz3Q2r3mTNWh4PTsDub64U/+TTYaJ5xk6kZN5ZAx0SVFdARcJyCjwMzSg==
 
 optionator@^0.9.1:
   version "0.9.1"

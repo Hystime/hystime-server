@@ -3,7 +3,7 @@ enum TargetType{
     LONGTERM
 }
 
-enum TimepieceType{
+enum TimePieceType{
     NORMAL
     POMODORO
 }
@@ -43,8 +43,19 @@ type Target{
     timeSpent: Int!,
 
     """Consumption time periods"""
-    timePieces(days:[DateTime]): [TimePiece!]
+    timePieces(first: Int!, after: String): TimePieceConnection!
 
+}
+
+type TimePieceEdge {
+    node: TimePiece
+    cursor: String
+}
+
+type TimePieceConnection {
+    totalCount: Int
+    edges: [TimePieceEdge]
+    pageInfo: PageInfo
 }
 
 """
@@ -61,5 +72,5 @@ type TimePiece{
     duration: Int!,
 
     """Timepiece type"""
-    type: TimepieceType,
+    type: TimePieceType,
 }

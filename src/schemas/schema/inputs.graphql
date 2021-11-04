@@ -25,11 +25,11 @@ input TargetUpdateInput {
 input TimePieceCreateInput {
     start: DateTime!,
     duration: Int!,
-    type: TimepieceType,
+    type: TimePieceType,
 }
 
 input TimePieceUpdateInput {
     start: DateTime,
     duration: Int,
-    type: TimepieceType,
+    type: TimePieceType,
 }

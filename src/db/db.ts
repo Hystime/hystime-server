@@ -1,23 +1,26 @@
 import {
   Target,
-  TargetCreateInput, TargetType,
+  TargetCreateInput,
+  TargetType,
   TargetUpdateInput,
   TimePiece,
-  TimePieceCreateInput, TimepieceType,
+  TimePieceCreateInput,
+  TimePieceType,
   TimePieceUpdateInput,
   User,
   UserCreateInput,
-  UserUpdateInput
-} from "../generated/types";
+  UserUpdateInput,
+} from '../generated/types';
 import { UserEntity } from '../entities/user';
 import { EntityTarget, getConnection } from 'typeorm';
 import { TimePieceEntity } from '../entities/timePiece';
 import { TargetEntity } from '../entities/target';
 import { assertType } from '../utils';
 
+// FIXME： Entity type to GraphQL Type
 export class Db {
   public static async getUser(username: string): Promise<User | null> {
-    const user = await getConnection().manager.findOne(UserEntity, { username });
+    const user = await getConnection().manager.findOne(UserEntity, { username }, { relations: ['targets'] });
     return user ? user : null;
   }
 
@@ -191,7 +194,7 @@ class DbUtils {
     const timePieceEntity = new TimePieceEntity();
     timePieceEntity.start = input.start;
     timePieceEntity.duration = input.duration;
-    timePieceEntity.type = input.type || TimepieceType.Normal;
+    timePieceEntity.type = input.type || TimePieceType.Normal;
     return timePieceEntity;
   }
 }
