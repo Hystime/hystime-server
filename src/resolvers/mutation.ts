@@ -2,16 +2,16 @@ import { Db } from '../db/db';
 import { MutationResolvers, Target, TimePiece, User } from '../generated/types';
 
 export const Mutation: MutationResolvers = {
-  userCreate: async (parent, args, context, info): Promise<User | null> => {
-    const { input } = args;
+  userCreate: async (parent, { input }, context, info): Promise<User | null> => {
+    return Db.createUser(input);
   },
-  userUpdate: async (parent, args, context, info): Promise<User | null> => {
-    const { user_id, input } = args;
+  userUpdate: async (parent, { user_id, input }, context, info): Promise<User | null> => {
+    return Db.updateUser(user_id, input);
   },
-  targetCreate: async (parent, args, context, info): Promise<Target | null> => {
-    const { input } = args;
+  targetCreate: async (parent, { input }, context, info): Promise<Target | null> => {
+    return Db.createTarget(input);
   },
-  targetUpdate: async (parent, args, context, info): Promise<Target> => {
+  targetUpdate: async (parent, args, context, info): Promise<Target|null> => {
     const { target_id, input } = args;
   },
   targetDelete: async (parent, args, context, info): Promise<boolean> => {
