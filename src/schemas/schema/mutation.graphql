@@ -6,7 +6,7 @@ type Mutation{
     userUpdate(user_id:ID!,input:UserUpdateInput!): User
 
     """Add a target"""
-    targetCreate(input:TargetCreateInput!): Target
+    targetCreate(user_id:ID!,input:TargetCreateInput!): Target
 
     """Update a target"""
     targetUpdate(target_id:ID!,input:TargetCreateInput!): Target

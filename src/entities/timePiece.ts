@@ -1,7 +1,8 @@
 import { Column, Entity, JoinColumn, ManyToOne, PrimaryColumn, PrimaryGeneratedColumn } from 'typeorm';
 import { TargetEntity } from './target';
+import { TimepieceType } from "../generated/types";
 
-@Entity()
+@Entity({ name: 'time_piece' })
 export class TimePieceEntity {
   @PrimaryGeneratedColumn()
   id: number;
@@ -16,6 +17,6 @@ export class TimePieceEntity {
   @Column()
   duration: number;
 
-  @Column()
-  type: string;
+  @Column('varchar', { length: 20 })
+  type: TimepieceType;
 }

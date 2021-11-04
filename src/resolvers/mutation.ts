@@ -8,25 +8,25 @@ export const Mutation: MutationResolvers = {
   userUpdate: async (parent, { user_id, input }, context, info): Promise<User | null> => {
     return Db.updateUser(user_id, input);
   },
-  targetCreate: async (parent, { input }, context, info): Promise<Target | null> => {
-    return Db.createTarget(input);
+  targetCreate: async (parent, { user_id, input }, context, info): Promise<Target | null> => {
+    return Db.createTarget(user_id, input);
   },
-  targetUpdate: async (parent, args, context, info): Promise<Target|null> => {
-    const { target_id, input } = args;
+  targetUpdate: async (parent, { target_id, input }, context, info): Promise<Target | null> => {
+    return Db.updateTarget(target_id, input);
   },
-  targetDelete: async (parent, args, context, info): Promise<boolean> => {
-    const { target_id } = args;
+  targetDelete: async (parent, { target_id }, context, info): Promise<boolean> => {
+    return Db.deleteTarget(target_id);
   },
-  timePieceCreate: async (parent, args, context, info): Promise<TimePiece> => {
-    const { target_id, input } = args;
+  timePieceCreate: async (parent, { target_id, input }, context, info): Promise<TimePiece | null> => {
+    return Db.createTimePiece(target_id, input);
   },
-  timePieceUpdate: async (parent, args, context, info): Promise<TimePiece> => {
-    const { timepiece_id, input } = args;
+  timePieceUpdate: async (parent, { timepiece_id, input }, context, info): Promise<TimePiece | null> => {
+    return Db.updateTimePiece(timepiece_id, input);
   },
-  timePieceDelete: async (parent, args, context, info): Promise<boolean> => {
-    const { timepiece_id } = args;
+  timePieceDelete: async (parent, { timepiece_id }, context, info): Promise<boolean> => {
+    return Db.deleteTimePiece(timepiece_id);
   },
-  timePiecesCreateForTarget: async (parent, args, context, info): Promise<TimePiece[]> => {
-    const { target_id, input } = args;
+  timePiecesCreateForTarget: async (parent, { target_id, input }, context, info): Promise<TimePiece[] | null> => {
+    return Db.createTimePieces(target_id, input);
   },
 };

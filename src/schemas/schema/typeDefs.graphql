@@ -1,4 +1,12 @@
+enum TargetType{
+    NORMAL
+    LONGTERM
+}
 
+enum TimepieceType{
+    NORMAL
+    POMODORO
+}
 
 """User"""
 type User{
@@ -28,6 +36,9 @@ type Target{
     """Target name"""
     name: String!,
 
+    """Target type"""
+    type: TargetType,
+
     """Time spent on this target"""
     timeSpent: Int!,
 
@@ -47,5 +58,8 @@ type TimePiece{
     start: DateTime!,
 
     """Time spend on this piece, count as seconds"""
-    duration: Int!
+    duration: Int!,
+
+    """Timepiece type"""
+    type: TimepieceType,
 }

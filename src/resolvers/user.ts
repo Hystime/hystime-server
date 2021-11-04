@@ -1,18 +1,17 @@
 import { UserEntity } from '../entities/user';
+import { UserResolvers } from '../generated/types';
 
-export const userResolver = {
-  User: {
-    id: async (parent: UserEntity, args: any, context: any, info: any) => {
-      return parent.id;
-    },
-    username: async (parent: UserEntity, args: any, context: any, info: any) => {
-      return parent.username;
-    },
-    created_at: async (parent: UserEntity, args: any, context: any, info: any) => {
-      return parent.created_at;
-    },
-    targets: async (parent: UserEntity, args: any, context: any, info: any) => {
-      return parent.targets;
-    },
+export const User: UserResolvers = {
+  id: async (parent, args, context, info) => {
+    return parent.id;
+  },
+  username: async (parent, args, context, info) => {
+    return parent.username;
+  },
+  created_at: async (parent, args, context, info) => {
+    return parent.created_at;
+  },
+  targets: async (parent, args, context, info) => {
+    return parent.targets;
   },
 };

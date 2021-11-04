@@ -2,8 +2,9 @@ import { Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, OneToMany, Pri
 import { TimePieceEntity } from './timePiece';
 import { UserEntity } from './user';
 import { preventWildChild } from './util';
+import { TargetType } from "../generated/types";
 
-@Entity()
+@Entity({ name: 'target' })
 export class TargetEntity {
   @PrimaryGeneratedColumn('uuid')
   id: string;
@@ -20,6 +21,9 @@ export class TargetEntity {
 
   @Column()
   timeSpent: number;
+
+  @Column('varchar', { length: 20 })
+  type: TargetType;
 
   @OneToMany(() => TimePieceEntity, (timePiece) => timePiece.target, preventWildChild)
   timePieces: TimePieceEntity[];

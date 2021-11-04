@@ -2,35 +2,34 @@
 
 input UserCreateInput {
     username: String!,
-    targets: [TargetCreateInput!]
+    targets: [TargetCreateInput!],
 }
 
 input UserUpdateInput {
-    username: String
+    username: String,
 }
 
 input TargetCreateInput {
-    user_id: ID!,
     name: String!,
     timeSpent: Int,
-    type: String,
-    timePieces: [TimePieceCreateInput!]
+    type: TargetType,
+    timePieces: [TimePieceCreateInput!],
 }
 
 input TargetUpdateInput {
     name: String,
     timeSpent: Int,
-    type: String,
+    type: TargetType,
 }
 
 input TimePieceCreateInput {
     start: DateTime!,
     duration: Int!,
-    type: String
+    type: TimepieceType,
 }
 
 input TimePieceUpdateInput {
     start: DateTime,
     duration: Int,
-    type: String
+    type: TimepieceType,
 }

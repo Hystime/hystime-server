@@ -2,7 +2,7 @@ import { Column, CreateDateColumn, Entity, OneToMany, PrimaryColumn, PrimaryGene
 import { TargetEntity } from './target';
 import { preventWildChild } from './util';
 
-@Entity()
+@Entity({ name: 'user' })
 export class UserEntity {
   @PrimaryGeneratedColumn('uuid')
   id: string;
