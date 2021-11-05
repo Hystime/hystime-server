@@ -142,7 +142,7 @@ export class Db {
 }
 
 class DbUtils {
-  // User can not be duplicate
+  // Username can not be duplicate
   public static async checkUser(username: string): Promise<undefined | UserEntity> {
     const userRepo = getConnection().getRepository(UserEntity);
     return await userRepo.findOne({ username: username });
