@@ -55,12 +55,15 @@ export class Db {
   public static async createTarget(user_id: string, input: TargetCreateInput): Promise<Target | null> {
     const userEntity = await DbUtils.checkEntityById(user_id, UserEntity);
     if (userEntity) {
+      if (await DbUtils.checkTarget(userEntity, input.name)) {
+        return null;
+      }
       const targetEntity = DbUtils.getTargetEntity(input);
+      targetEntity.user = userEntity;
       await getConnection().manager.save(targetEntity);
       return DbUtils.e2g.target(targetEntity);
-    } else {
-      return null;
     }
+    return null;
   }
 
   public static async updateTarget(target_id: string, input: TargetUpdateInput): Promise<Target | null> {
@@ -181,6 +184,11 @@ class DbUtils {
   public static async checkUser(username: string): Promise<undefined | UserEntity> {
     const userRepo = getConnection().getRepository(UserEntity);
     return await userRepo.findOne({ username: username });
+  }
+
+  public static async checkTarget(user: UserEntity, name: string): Promise<undefined | TargetEntity> {
+    const targetRepo = getConnection().getRepository(TargetEntity);
+    return await targetRepo.findOne({ name: name, user });
   }
 
   public static async checkEntityById<T>(id: string | number, type: EntityTarget<T>): Promise<T | undefined> {
