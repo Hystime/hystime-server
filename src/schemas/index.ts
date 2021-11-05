@@ -2,6 +2,7 @@ import typeDefs from './schema/typeDefs.graphql';
 import inputs from './schema/inputs.graphql';
 import query from './schema/query.graphql';
 import mutations from './schema/mutation.graphql';
+import pagination from './schema/pagination.graphql';
 import { typeDefs as scalars } from 'graphql-scalars';
 
-export default [typeDefs, query, inputs, mutations, ...scalars];
+export default [typeDefs, query, inputs, mutations, pagination, ...scalars];

@@ -21,19 +21,19 @@ import { assertType } from '../utils';
 export class Db {
   public static async getUser(username: string): Promise<User | null> {
     const user = await getConnection().manager.findOne(UserEntity, { username }, { relations: ['targets'] });
-    return user ? user : null;
+    return user ? DbUtils.e2g.user(user) : null;
   }
 
   public static async getTarget(target_id: string): Promise<Target | null> {
     const target = await getConnection().manager.findOne(TargetEntity, { id: target_id });
-    return target ? target : null;
+    return target ? DbUtils.e2g.target(target) : null;
   }
 
   public static async createUser(input: UserCreateInput): Promise<User | null> {
     if ((await DbUtils.checkUser(input.username)) === undefined) {
       const userEntity = DbUtils.getUserEntity(input);
       await getConnection().manager.save(userEntity);
-      return userEntity;
+      return DbUtils.e2g.user(userEntity);
     } else {
       return null;
     }
@@ -49,7 +49,7 @@ export class Db {
       return null;
     }
     await getConnection().manager.save(userEntity);
-    return userEntity;
+    return DbUtils.e2g.user(userEntity);
   }
 
   public static async createTarget(user_id: string, input: TargetCreateInput): Promise<Target | null> {
@@ -57,7 +57,7 @@ export class Db {
     if (userEntity) {
       const targetEntity = DbUtils.getTargetEntity(input);
       await getConnection().manager.save(targetEntity);
-      return targetEntity;
+      return DbUtils.e2g.target(targetEntity);
     } else {
       return null;
     }
@@ -73,7 +73,7 @@ export class Db {
         targetEntity.name = input.name;
       }
       await getConnection().manager.save(targetEntity);
-      return targetEntity;
+      return DbUtils.e2g.target(targetEntity);
     } else {
       return null;
     }
@@ -142,6 +142,53 @@ export class Db {
 }
 
 class DbUtils {
+  // type GraphQLTypeFromEntity<T> =
+
+  // public static entityToGraphQLType<T>(entity: EntityTarget<any>, target: new () => T): T {
+  //   const obj = new target();
+  //   for (const key of Object.keys(entity)) {
+  //     if (key === 'id') {
+  //       continue;
+  //     }
+  //     // @ts-ignore
+  //     obj[key] = entity[key];
+  //   }
+  //   return obj;
+  // }
+  static e2g = class {
+    public static user(entity: UserEntity): User {
+      const obj: User = {
+        created_at: null,
+        id: '',
+        targets: undefined,
+        username: '',
+      };
+      for (const objKey of Object.keys(obj)) {
+        // @ts-ignore
+        obj[objKey] = entity[objKey];
+        if (objKey === 'targets') {
+          obj[objKey] = entity[objKey].map((value) => DbUtils.e2g.target(value));
+        }
+      }
+      return obj;
+    }
+
+    public static target(entity: TargetEntity): Target {
+      const obj: Target = {
+        created_at: null,
+        id: '',
+        name: '',
+        // @ts-ignore
+        type: '',
+      };
+      for (const objKey of Object.keys(obj)) {
+        // @ts-ignore
+        obj[objKey] = entity[objKey];
+      }
+      return obj;
+    }
+  };
+
   // Username can not be duplicate
   public static async checkUser(username: string): Promise<undefined | UserEntity> {
     const userRepo = getConnection().getRepository(UserEntity);
