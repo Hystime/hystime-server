@@ -8,7 +8,6 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-
     steps:
       - uses: actions/checkout@v2
 
@@ -28,3 +27,9 @@ jobs:
         with:
           name: server.js
           path: 'dist/server.js'
+
+      - name: Upload a Build Artifact
+        uses: actions/upload-artifact@v2.2.4
+        with:
+          name: graphql.schema.json
+          path: 'graphql.schema.json'

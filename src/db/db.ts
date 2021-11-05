@@ -157,35 +157,23 @@ class DbUtils {
   // }
   static e2g = class {
     public static user(entity: UserEntity): User {
-      const obj: User = {
-        created_at: null,
-        id: '',
-        targets: undefined,
-        username: '',
+      return {
+        created_at: entity.created_at,
+        id: entity.id,
+        targets: entity.targets === undefined ? null : entity.targets.map((value) => DbUtils.e2g.target(value)),
+        username: entity.username,
       };
-      for (const objKey of Object.keys(obj)) {
-        // @ts-ignore
-        obj[objKey] = entity[objKey];
-        if (objKey === 'targets') {
-          obj[objKey] = entity[objKey].map((value) => DbUtils.e2g.target(value));
-        }
-      }
-      return obj;
     }
 
     public static target(entity: TargetEntity): Target {
-      const obj: Target = {
-        created_at: null,
-        id: '',
-        name: '',
-        // @ts-ignore
-        type: '',
+      return {
+        created_at: entity.created_at,
+        id: entity.id,
+        name: entity.name,
+        type: entity.type,
+        timeSpent: entity.timeSpent,
+        timePieces: null, // Works as trick, timePieces resolver will not use data from parent. TODO: make this more graceful
       };
-      for (const objKey of Object.keys(obj)) {
-        // @ts-ignore
-        obj[objKey] = entity[objKey];
-      }
-      return obj;
     }
   };
 

@@ -3,5 +3,5 @@ type Query{
     user(username:String!):User
 
     """Try to find one target"""
-    target(target_id:UUID!):Target
+    target(target_id:ID!):Target
 }
