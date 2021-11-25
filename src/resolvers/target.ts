@@ -41,7 +41,7 @@ export const Target: TargetResolvers = {
         after,
         orderBy: {
           direction: OrderDirection.DESC,
-          field: 'id',
+          field: 'start',
         },
       },
       {

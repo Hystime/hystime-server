@@ -2,6 +2,7 @@ enum OrderDirection {
     ASC
     DESC
 }
+
 type PageInfo {
     """The first cursor in the page."""
     startCursor: String
