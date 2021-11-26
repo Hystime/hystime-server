@@ -48,14 +48,14 @@ type Target{
 }
 
 type TimePieceEdge {
-    node: TimePiece
-    cursor: String
+    node: TimePiece!
+    cursor: String!
 }
 
 type TimePieceConnection {
-    totalCount: Int
-    edges: [TimePieceEdge]
-    pageInfo: PageInfo
+    totalCount: Int!
+    edges: [TimePieceEdge!]!
+    pageInfo: PageInfo!
 }
 
 """
