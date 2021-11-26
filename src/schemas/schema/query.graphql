@@ -4,4 +4,7 @@ type Query{
 
     """Try to find one target"""
     target(target_id:ID!):Target
+
+    """Try to find timepieces for one user"""
+    timepieces(user_id:ID!, first: Int!, after: String):TimePieceConnection!
 }

@@ -4,6 +4,7 @@ import {
   TargetType,
   TargetUpdateInput,
   TimePiece,
+  TimePieceConnection,
   TimePieceCreateInput,
   TimePieceType,
   TimePieceUpdateInput,
@@ -16,6 +17,7 @@ import { EntityTarget, getConnection } from 'typeorm';
 import { TimePieceEntity } from '../entities/timePiece';
 import { TargetEntity } from '../entities/target';
 import { assertType } from '../utils';
+import { OrderDirection, paginate } from '../utils/pagination';
 
 // FIXME： Entity type to GraphQL Type
 export class Db {
@@ -142,22 +144,32 @@ export class Db {
       return null;
     }
   }
+
+  public static async getTimepieces(user_id: string, first: number, after: string | null | undefined): Promise<TimePieceConnection> {
+    return paginate(
+      {
+        first,
+        after,
+        orderBy: {
+          direction: OrderDirection.DESC,
+          field: 'start',
+        },
+      },
+      {
+        type: 'TimePieceEntity',
+        alias: 'timePieces',
+        validateCursor: true,
+        orderFieldToKey: (field) => field,
+        queryBuilder: getConnection()
+          .getRepository(TimePieceEntity)
+          .createQueryBuilder('timePieces')
+          .innerJoinAndSelect('timePieces.targetId', 'target', 'target.userId = :userId', { userId: user_id }),
+      }
+    );
+  }
 }
 
 class DbUtils {
-  // type GraphQLTypeFromEntity<T> =
-
-  // public static entityToGraphQLType<T>(entity: EntityTarget<any>, target: new () => T): T {
-  //   const obj = new target();
-  //   for (const key of Object.keys(entity)) {
-  //     if (key === 'id') {
-  //       continue;
-  //     }
-  //     // @ts-ignore
-  //     obj[key] = entity[key];
-  //   }
-  //   return obj;
-  // }
   static e2g = class {
     public static user(entity: UserEntity): User {
       return {
@@ -239,5 +251,9 @@ class DbUtils {
     timePieceEntity.duration = input.duration;
     timePieceEntity.type = input.type || TimePieceType.Normal;
     return timePieceEntity;
+  }
+
+  public static updateTimeSpent(target_id: string, timeChange: number): Promise<void> {
+    const targetRepo = getConnection().getRepository(TargetEntity);
   }
 }
