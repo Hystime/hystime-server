@@ -49,7 +49,10 @@ export const Target: TargetResolvers = {
         alias: 'timePieces',
         validateCursor: true,
         orderFieldToKey: (field) => field,
-        repository: getConnection().getRepository(TimePieceEntity),
+        queryBuilder: getConnection()
+          .getRepository(TimePieceEntity)
+          .createQueryBuilder('timePieces')
+          .where('timePieces.targetId = :targetId', { targetId: parent.id }),
       }
     );
   },

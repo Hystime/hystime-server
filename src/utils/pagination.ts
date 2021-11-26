@@ -252,7 +252,9 @@ export async function paginate<Entity extends ObjectLiteral, OrderField>(
   // Make sure the cursor is valid
   if (decodedCursor && options.validateCursor) {
     // Make sure the ID of the first result matches the cursor ID
-    if (decodedCursor.id !== results[0].id.toString()) throw new InvalidCursorError();
+    if (results.length > 0) {
+      if (decodedCursor.id !== results[0].id.toString()) throw new InvalidCursorError();
+    }
   }
   // Convert the nodes into edges
   const edges: Edge<Entity>[] = [];
