@@ -13,7 +13,7 @@ import {
   UserUpdateInput,
 } from '../generated/types';
 import { UserEntity } from '../entities/user';
-import { EntityTarget, getConnection, UpdateResult } from "typeorm";
+import { EntityTarget, getConnection, UpdateResult } from 'typeorm';
 import { TimePieceEntity } from '../entities/timePiece';
 import { TargetEntity } from '../entities/target';
 import { assertType } from '../utils';
@@ -22,20 +22,24 @@ import { OrderDirection, paginate } from '../utils/pagination';
 // FIXME： Entity type to GraphQL Type
 export class Db {
   public static async getUser(username: string): Promise<User | null> {
-    const user = await getConnection().manager.findOne(UserEntity, { username }, { relations: ['targets'] });
-    return user ? DbUtils.e2g.user(user) : null;
+    const user = await getConnection().manager.findOne(
+      UserEntity,
+      { username },
+      { relations: ['targets'] }
+    );
+    return user ? DbUtils.entity2graph.user(user) : null;
   }
 
   public static async getTarget(target_id: string): Promise<Target | null> {
     const target = await getConnection().manager.findOne(TargetEntity, { id: target_id });
-    return target ? DbUtils.e2g.target(target) : null;
+    return target ? DbUtils.entity2graph.target(target) : null;
   }
 
   public static async createUser(input: UserCreateInput): Promise<User | null> {
     if ((await DbUtils.checkUser(input.username)) === undefined) {
       const userEntity = DbUtils.getUserEntity(input);
       await getConnection().manager.save(userEntity);
-      return DbUtils.e2g.user(userEntity);
+      return DbUtils.entity2graph.user(userEntity);
     } else {
       return null;
     }
@@ -51,10 +55,13 @@ export class Db {
       return null;
     }
     await getConnection().manager.save(userEntity);
-    return DbUtils.e2g.user(userEntity);
+    return DbUtils.entity2graph.user(userEntity);
   }
 
-  public static async createTarget(user_id: string, input: TargetCreateInput): Promise<Target | null> {
+  public static async createTarget(
+    user_id: string,
+    input: TargetCreateInput
+  ): Promise<Target | null> {
     const userEntity = await DbUtils.checkEntityById(user_id, UserEntity);
     if (userEntity) {
       if (await DbUtils.checkTarget(userEntity, input.name)) {
@@ -63,12 +70,15 @@ export class Db {
       const targetEntity = DbUtils.getTargetEntity(input);
       targetEntity.user = userEntity;
       await getConnection().manager.save(targetEntity);
-      return DbUtils.e2g.target(targetEntity);
+      return DbUtils.entity2graph.target(targetEntity);
     }
     return null;
   }
 
-  public static async updateTarget(target_id: string, input: TargetUpdateInput): Promise<Target | null> {
+  public static async updateTarget(
+    target_id: string,
+    input: TargetUpdateInput
+  ): Promise<Target | null> {
     const targetEntity = await DbUtils.checkEntityById(target_id, TargetEntity);
     if (targetEntity) {
       if (input.type) {
@@ -78,7 +88,7 @@ export class Db {
         targetEntity.name = input.name;
       }
       await getConnection().manager.save(targetEntity);
-      return DbUtils.e2g.target(targetEntity);
+      return DbUtils.entity2graph.target(targetEntity);
     } else {
       return null;
     }
@@ -93,7 +103,10 @@ export class Db {
     return false;
   }
 
-  public static async createTimePiece(target_id: string, input: TimePieceCreateInput): Promise<TimePiece | null> {
+  public static async createTimePiece(
+    target_id: string,
+    input: TimePieceCreateInput
+  ): Promise<TimePiece | null> {
     const targetEntity = await DbUtils.checkEntityById(target_id, TargetEntity);
     if (targetEntity) {
       const timePieceEntity = DbUtils.getTimePieceEntity(input);
@@ -106,7 +119,10 @@ export class Db {
     }
   }
 
-  public static async updateTimePiece(timepiece_id: number, input: TimePieceUpdateInput): Promise<TimePiece | null> {
+  public static async updateTimePiece(
+    timepiece_id: number,
+    input: TimePieceUpdateInput
+  ): Promise<TimePiece | null> {
     const timePieceEntity = await DbUtils.checkEntityById(timepiece_id, TimePieceEntity);
     if (timePieceEntity) {
       if (input.start) {
@@ -120,7 +136,10 @@ export class Db {
       }
       await getConnection().manager.save(timePieceEntity);
       if (input.duration - timePieceEntity.duration !== 0) {
-        await DbUtils.updateTimeSpent(timePieceEntity.target.id, input.duration - timePieceEntity.duration);
+        await DbUtils.updateTimeSpent(
+          timePieceEntity.target.id,
+          input.duration - timePieceEntity.duration
+        );
       }
       return timePieceEntity;
     } else {
@@ -138,7 +157,10 @@ export class Db {
     return false;
   }
 
-  public static async createTimePieces(target_id: string, input: TimePieceCreateInput[]): Promise<TimePieceEntity[] | null> {
+  public static async createTimePieces(
+    target_id: string,
+    input: TimePieceCreateInput[]
+  ): Promise<TimePieceEntity[] | null> {
     const targetEntity = await DbUtils.checkEntityById(target_id, TargetEntity);
     if (targetEntity) {
       const timePieceEntities = input.map((timePiece) => DbUtils.getTimePieceEntity(timePiece));
@@ -154,7 +176,11 @@ export class Db {
     }
   }
 
-  public static async getTimepieces(user_id: string, first: number, after: string | null | undefined): Promise<TimePieceConnection> {
+  public static async getTimepieces(
+    user_id: string,
+    first: number,
+    after: string | null | undefined
+  ): Promise<TimePieceConnection> {
     return paginate(
       {
         first,
@@ -172,19 +198,24 @@ export class Db {
         queryBuilder: getConnection()
           .getRepository(TimePieceEntity)
           .createQueryBuilder('timePieces')
-          .innerJoinAndSelect('timePieces.targetId', 'target', 'target.userId = :userId', { userId: user_id }),
+          .innerJoinAndSelect('timePieces.targetId', 'target', 'target.userId = :userId', {
+            userId: user_id,
+          }),
       }
     );
   }
 }
 
 class DbUtils {
-  static e2g = class {
+  static entity2graph = class {
     public static user(entity: UserEntity): User {
       return {
         created_at: entity.created_at,
         id: entity.id,
-        targets: entity.targets === undefined ? null : entity.targets.map((value) => DbUtils.e2g.target(value)),
+        targets:
+          entity.targets === undefined
+            ? null
+            : entity.targets.map((value) => DbUtils.entity2graph.target(value)),
         username: entity.username,
       };
     }
@@ -207,12 +238,18 @@ class DbUtils {
     return await userRepo.findOne({ username: username });
   }
 
-  public static async checkTarget(user: UserEntity, name: string): Promise<undefined | TargetEntity> {
+  public static async checkTarget(
+    user: UserEntity,
+    name: string
+  ): Promise<undefined | TargetEntity> {
     const targetRepo = getConnection().getRepository(TargetEntity);
     return await targetRepo.findOne({ name: name, user });
   }
 
-  public static async checkEntityById<T>(id: string | number, type: EntityTarget<T>): Promise<T | undefined> {
+  public static async checkEntityById<T>(
+    id: string | number,
+    type: EntityTarget<T>
+  ): Promise<T | undefined> {
     const repo = getConnection().getRepository(type);
     // @ts-ignore
     return await repo.findOne({ id: id });
@@ -241,7 +278,9 @@ class DbUtils {
   public static getTargetEntity(input: TargetCreateInput): TargetEntity {
     const targetEntity = new TargetEntity();
     targetEntity.name = input.name;
-    targetEntity.timeSpent = input.timeSpent || 0;
+    targetEntity.timeSpent =
+      (input.timeSpent || 0) +
+      input.timePieces.map((timePieceInput) => timePieceInput.duration).reduce((a, b) => a + b, 0);
     targetEntity.type = input.type || TargetType.Normal;
     if (input.timePieces) {
       targetEntity.timePieces = input.timePieces.map((timePieceInput) => {
