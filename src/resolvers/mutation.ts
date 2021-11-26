@@ -18,15 +18,15 @@ export const Mutation: MutationResolvers = {
     return Db.deleteTarget(target_id);
   },
   timePieceCreate: async (parent, { target_id, input }, context, info) => {
-    return Db.createTimePiece(target_id, input); // FIXME: Not update timeSpent in Target
+    return Db.createTimePiece(target_id, input);
   },
   timePieceUpdate: async (parent, { timepiece_id, input }, context, info) => {
-    return Db.updateTimePiece(timepiece_id, input); // FIXME: Not update timeSpent in Target
+    return Db.updateTimePiece(timepiece_id, input);
   },
   timePieceDelete: async (parent, { timepiece_id }, context, info) => {
-    return Db.deleteTimePiece(timepiece_id); // FIXME: Not update timeSpent in Target
+    return Db.deleteTimePiece(timepiece_id);
   },
   timePiecesCreateForTarget: async (parent, { target_id, input }, context, info) => {
-    return Db.createTimePieces(target_id, input); // FIXME: Not update timeSpent in Target
+    return Db.createTimePieces(target_id, input);
   },
 };

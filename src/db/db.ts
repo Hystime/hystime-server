@@ -13,7 +13,7 @@ import {
   UserUpdateInput,
 } from '../generated/types';
 import { UserEntity } from '../entities/user';
-import { EntityTarget, getConnection } from 'typeorm';
+import { EntityTarget, getConnection, UpdateResult } from "typeorm";
 import { TimePieceEntity } from '../entities/timePiece';
 import { TargetEntity } from '../entities/target';
 import { assertType } from '../utils';
@@ -99,6 +99,7 @@ export class Db {
       const timePieceEntity = DbUtils.getTimePieceEntity(input);
       timePieceEntity.target = targetEntity;
       await getConnection().manager.save(timePieceEntity);
+      await DbUtils.updateTimeSpent(target_id, input.duration);
       return timePieceEntity;
     } else {
       return null;
@@ -118,6 +119,9 @@ export class Db {
         timePieceEntity.type = input.type;
       }
       await getConnection().manager.save(timePieceEntity);
+      if (input.duration - timePieceEntity.duration !== 0) {
+        await DbUtils.updateTimeSpent(timePieceEntity.target.id, input.duration - timePieceEntity.duration);
+      }
       return timePieceEntity;
     } else {
       return null;
@@ -127,6 +131,7 @@ export class Db {
   public static async deleteTimePiece(timepiece_id: number): Promise<boolean> {
     const timePieceEntity = await DbUtils.checkEntityById(timepiece_id, TimePieceEntity);
     if (timePieceEntity) {
+      await DbUtils.updateTimeSpent(timePieceEntity.target.id, -timePieceEntity.duration);
       await getConnection().manager.remove(timePieceEntity);
       return true;
     }
@@ -139,6 +144,10 @@ export class Db {
       const timePieceEntities = input.map((timePiece) => DbUtils.getTimePieceEntity(timePiece));
       timePieceEntities.forEach((timePiece) => (timePiece.target = targetEntity));
       await getConnection().manager.save(timePieceEntities);
+      await DbUtils.updateTimeSpent(
+        target_id,
+        timePieceEntities.map((timePiece) => timePiece.duration).reduce((a, b) => a + b, 0)
+      );
       return timePieceEntities;
     } else {
       return null;
@@ -253,7 +262,12 @@ class DbUtils {
     return timePieceEntity;
   }
 
-  public static updateTimeSpent(target_id: string, timeChange: number): Promise<void> {
-    const targetRepo = getConnection().getRepository(TargetEntity);
+  public static updateTimeSpent(target_id: string, timeChange: number): Promise<UpdateResult> {
+    const repo = getConnection().getRepository(TargetEntity);
+    if (timeChange > 0) {
+      return repo.increment({ id: target_id }, 'timeSpent', timeChange);
+    } else {
+      return repo.decrement({ id: target_id }, 'timeSpent', -timeChange);
+    }
   }
 }
