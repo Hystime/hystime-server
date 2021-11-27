@@ -4,37 +4,37 @@ import { TimePieceEntity } from '../entities/timePiece';
 import { getConnection } from 'typeorm';
 
 export const TimePiece: TimePieceResolvers = {
-  async id(parent, args, context, info) {
+  async id(parent) {
     return parent.id;
   },
-  start: async (parent, args, context, info) => {
+  start: async (parent) => {
     return parent.start;
   },
-  duration: async (parent, args, context, info) => {
+  duration: async (parent) => {
     return parent.duration;
   },
-  type: async (parent, args, context, info) => {
+  type: async (parent) => {
     return parent.type;
   },
 };
 
 export const Target: TargetResolvers = {
-  id: async (parent, args, context, info) => {
+  id: async (parent) => {
     return parent.id;
   },
-  type: async (parent, args, context, info) => {
+  type: async (parent) => {
     return parent.type;
   },
-  created_at: async (parent, args, context, info) => {
+  created_at: async (parent) => {
     return parent.created_at;
   },
-  name: async (parent, args, context, info) => {
+  name: async (parent) => {
     return parent.name;
   },
-  timeSpent: async (parent, args, context, info) => {
+  timeSpent: async (parent) => {
     return parent.timeSpent;
   },
-  timePieces: async (parent, { first, after }, context, info) => {
+  timePieces: async (parent, { first, after }) => {
     return paginate(
       {
         first,
