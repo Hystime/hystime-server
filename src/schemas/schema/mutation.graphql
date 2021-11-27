@@ -9,7 +9,7 @@ type Mutation{
     targetCreate(user_id:ID!,input:TargetCreateInput!): Target
 
     """Update a target"""
-    targetUpdate(target_id:ID!,input:TargetCreateInput!): Target
+    targetUpdate(target_id:ID!,input:TargetUpdateInput!): Target
 
     """Delete a target"""
     targetDelete(target_id:ID!): Boolean
