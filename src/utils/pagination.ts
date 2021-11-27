@@ -259,7 +259,11 @@ export async function paginate<Entity extends ObjectLiteral, OrderField>(
   // Convert the nodes into edges
   const edges: Edge<Entity>[] = [];
   // Exclude the first and last results
-  for (let i = findOptions.after ? 1 : 0; i < (results.length < dbTake ? results.length : results.length - 1); i += 1) {
+  for (
+    let i = findOptions.after ? 1 : 0;
+    i < (results.length < dbTake ? results.length : results.length - 1);
+    i += 1
+  ) {
     edges.push({
       node: results[i],
       cursor: encodeCursor(results[i].id, options.type, i + skip),

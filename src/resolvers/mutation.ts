@@ -1,5 +1,5 @@
 import { Db } from '../db/db';
-import { MutationResolvers} from '../generated/types';
+import { MutationResolvers } from '../generated/types';
 
 export const Mutation: MutationResolvers = {
   userCreate: async (parent, { input }) => {
