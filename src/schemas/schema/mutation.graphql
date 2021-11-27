@@ -12,7 +12,7 @@ type Mutation{
     targetUpdate(target_id:ID!,input:TargetUpdateInput!): Target
 
     """Delete a target"""
-    targetDelete(target_id:ID!): Boolean
+    targetDelete(target_id:ID!): Boolean!
 
     """Add timePiece for particular target"""
     timePieceCreate(target_id:String!,input:TimePieceCreateInput!): TimePiece
@@ -21,8 +21,8 @@ type Mutation{
     timePieceUpdate(timepiece_id:Int!,input:TimePieceUpdateInput!): TimePiece
 
     """Delete a timePiece"""
-    timePieceDelete(timepiece_id:Int!): Boolean
+    timePieceDelete(timepiece_id:Int!): Boolean!
 
     """Add timePieces for particular target"""
-    timePiecesCreateForTarget(target_id:String!,input:[TimePieceCreateInput!]!): [TimePiece]
+    timePiecesCreateForTarget(target_id:String!,input:[TimePieceCreateInput!]!): [TimePiece!]
 }
