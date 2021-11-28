@@ -63,7 +63,10 @@ async function start(): Promise<void> {
       }
     },
   });
-  const serverInfo = await server.listen();
+  const serverInfo = await server.listen({
+    port: process.env.PORT || 4000,
+    host: process.env.HOST || '0.0.0.0',
+  });
 
   console.log(`Server ready at ${serverInfo.url}. `);
 }
