@@ -20,7 +20,7 @@ async function start(): Promise<void> {
   if (exist) {
     token = fs.readFileSync(tokenPath).toString();
   } else {
-    token = nanoid(32);
+    token = nanoid(8);
     fs.writeFileSync(tokenPath, token);
   }
 
