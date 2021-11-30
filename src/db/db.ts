@@ -278,11 +278,12 @@ class DbUtils {
   public static getTargetEntity(input: TargetCreateInput): TargetEntity {
     const targetEntity = new TargetEntity();
     targetEntity.name = input.name;
-    targetEntity.timeSpent =
-      (input.timeSpent || 0) +
-      input.timePieces.map((timePieceInput) => timePieceInput.duration).reduce((a, b) => a + b, 0);
+    targetEntity.timeSpent = input.timeSpent || 0;
     targetEntity.type = input.type || TargetType.Normal;
     if (input.timePieces) {
+      targetEntity.timeSpent += input.timePieces
+        .map((timePieceInput) => timePieceInput.duration)
+        .reduce((a, b) => a + b, 0);
       targetEntity.timePieces = input.timePieces.map((timePieceInput) => {
         const entity = this.getTimePieceEntity(timePieceInput);
         entity.target = targetEntity;
