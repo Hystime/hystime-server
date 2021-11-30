@@ -25,7 +25,7 @@ jobs:
       - name: Upload a Build Artifact
         uses: actions/upload-artifact@v2.2.4
         with:
-          name: build.zip
+          name: build
           path: |
             dist/server.js
             dist/server.js.LICENSE.txt
