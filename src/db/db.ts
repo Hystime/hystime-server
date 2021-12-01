@@ -215,7 +215,9 @@ class DbUtils {
         targets:
           entity.targets === undefined
             ? null
-            : entity.targets.map((value) => DbUtils.entity2graph.target(value)),
+            : entity.targets
+                .map((value) => DbUtils.entity2graph.target(value))
+                .sort((a, b) => a.created_at.valueOf() - b.created_at.valueOf()),
         username: entity.username,
       };
     }
