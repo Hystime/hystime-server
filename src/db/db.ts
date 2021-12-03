@@ -19,66 +19,65 @@ import { TargetEntity } from '../entities/target';
 import { assertType } from '../utils';
 import { OrderDirection, paginate } from '../utils/pagination';
 
-// FIXME： Entity type to GraphQL Type
 export class Db {
-  public static async getUser(username: string): Promise<User | null> {
+  public static async getUser(username: string): Promise<User> {
     const user = await getConnection().manager.findOne(
       UserEntity,
       { username },
       { relations: ['targets'] }
     );
-    return user ? DbUtils.eTGM.user(user) : null;
+    if (!user) {
+      throw Error('User not found.');
+    }
+    return DbUtils.eTGM.user(user);
   }
 
-  public static async getTarget(target_id: string): Promise<Target | null> {
+  public static async getTarget(target_id: string): Promise<Target> {
     const target = await getConnection().manager.findOne(TargetEntity, { id: target_id });
-    return target ? DbUtils.eTGM.target(target) : null;
+    if (!target) {
+      throw Error('Target not found.');
+    }
+    return DbUtils.eTGM.target(target);
   }
 
-  public static async createUser(input: UserCreateInput): Promise<User | null> {
+  public static async createUser(input: UserCreateInput): Promise<User> {
     if ((await DbUtils.checkUser(input.username)) === undefined) {
       const userEntity = DbUtils.getUserEntity(input);
       await getConnection().manager.save(userEntity);
       return DbUtils.eTGM.user(userEntity);
     } else {
-      return null;
+      throw Error('Duplicate user.');
     }
   }
 
-  public static async updateUser(user_id: string, input: UserUpdateInput): Promise<User | null> {
+  public static async updateUser(user_id: string, input: UserUpdateInput): Promise<User> {
     const userEntity = await DbUtils.checkEntityById(user_id, UserEntity);
     if (userEntity) {
       if (input.username) {
         userEntity.username = input.username;
       }
     } else {
-      return null;
+      throw Error('User not found');
     }
     await getConnection().manager.save(userEntity);
     return DbUtils.eTGM.user(userEntity);
   }
 
-  public static async createTarget(
-    user_id: string,
-    input: TargetCreateInput
-  ): Promise<Target | null> {
+  public static async createTarget(user_id: string, input: TargetCreateInput): Promise<Target> {
     const userEntity = await DbUtils.checkEntityById(user_id, UserEntity);
     if (userEntity) {
       if (await DbUtils.checkTarget(userEntity, input.name)) {
-        return null;
+        throw Error('Duplicate target.');
       }
       const targetEntity = DbUtils.getTargetEntity(input);
       targetEntity.user = userEntity;
       await getConnection().manager.save(targetEntity);
       return DbUtils.eTGM.target(targetEntity);
     }
-    return null;
+    throw Error('User not found.');
   }
 
-  public static async updateTarget(
-    target_id: string,
-    input: TargetUpdateInput
-  ): Promise<Target | null> {
+  public static async updateTarget(target_id: string, input: TargetUpdateInput): Promise<Target> {
     const targetEntity = await DbUtils.checkEntityById(target_id, TargetEntity);
     if (targetEntity) {
       if (input.type) {
@@ -90,23 +89,24 @@ export class Db {
       await getConnection().manager.save(targetEntity);
       return DbUtils.eTGM.target(targetEntity);
     } else {
-      return null;
+      throw Error('Target not found.');
     }
   }
 
   public static async deleteTarget(target_id: string): Promise<boolean> {
     const targetEntity = await DbUtils.checkEntityById(target_id, TargetEntity);
     if (targetEntity) {
-      await getConnection().manager.remove(targetEntity); // FIXME: delete correspond timepiece.
+      await getConnection().manager.remove(targetEntity.timePieces);
+      await getConnection().manager.remove(targetEntity); // FIXME: use a transaction to delete in one operation
       return true;
     }
-    return false;
+    throw Error('Target not found.');
   }
 
   public static async createTimePiece(
     target_id: string,
     input: TimePieceCreateInput
-  ): Promise<TimePiece | null> {
+  ): Promise<TimePiece> {
     const targetEntity = await DbUtils.checkEntityById(target_id, TargetEntity);
     if (targetEntity) {
       const timePieceEntity = DbUtils.getTimePieceEntity(input);
@@ -115,14 +115,14 @@ export class Db {
       await DbUtils.updateTimeSpent(target_id, input.duration);
       return timePieceEntity;
     } else {
-      return null;
+      throw Error('Target not found.');
     }
   }
 
   public static async updateTimePiece(
     timepiece_id: number,
     input: TimePieceUpdateInput
-  ): Promise<TimePiece | null> {
+  ): Promise<TimePiece> {
     const timePieceEntity = await DbUtils.checkEntityById(timepiece_id, TimePieceEntity);
     if (timePieceEntity) {
       if (input.start) {
@@ -143,7 +143,7 @@ export class Db {
       }
       return timePieceEntity;
     } else {
-      return null;
+      throw Error('TimePiece not found.');
     }
   }
 
@@ -154,13 +154,13 @@ export class Db {
       await getConnection().manager.remove(timePieceEntity);
       return true;
     }
-    return false;
+    throw Error('TimePiece not found');
   }
 
   public static async createTimePieces(
     target_id: string,
     input: TimePieceCreateInput[]
-  ): Promise<TimePieceEntity[] | null> {
+  ): Promise<TimePieceEntity[]> {
     const targetEntity = await DbUtils.checkEntityById(target_id, TargetEntity);
     if (targetEntity) {
       const timePieceEntities = input.map((timePiece) => DbUtils.getTimePieceEntity(timePiece));
@@ -172,7 +172,7 @@ export class Db {
       );
       return timePieceEntities;
     } else {
-      return null;
+      throw Error('Target not found');
     }
   }
 

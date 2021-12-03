@@ -24,7 +24,7 @@ type User{
     targets: [Target!]
 
     """Timepieces in the last week"""
-    last_week_timePieces: [TimePiece!]
+    last_week_timePieces: [TimePiece!]!
 }
 
 """One Target"""
@@ -48,7 +48,7 @@ type Target{
     """Consumption time periods"""
     timePieces(first: Int!, after: String): TimePieceConnection!
 
-    last_week_timePieces: [TimePiece!]
+    last_week_timePieces: [TimePiece!]!
 
 }
 
