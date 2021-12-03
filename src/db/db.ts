@@ -281,8 +281,8 @@ class DbUtils {
     type: EntityTarget<T>
   ): Promise<T | undefined> {
     const repo = getConnection().getRepository(type);
-    // @ts-ignore
-    return await repo.findOne({ id: id });
+    // @ts-ignore manually assume id exist
+    return await repo.findOne({ id });
   }
 
   // Believe input is always valid.
