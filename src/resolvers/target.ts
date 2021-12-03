@@ -2,6 +2,7 @@ import { TargetResolvers, TimePieceResolvers } from '../generated/types';
 import { OrderDirection, paginate } from '../utils/pagination';
 import { TimePieceEntity } from '../entities/timePiece';
 import { getConnection } from 'typeorm';
+import { Db } from '../db/db';
 
 export const TimePiece: TimePieceResolvers = {
   async id(parent) {
@@ -55,5 +56,8 @@ export const Target: TargetResolvers = {
           .where('timePieces.targetId = :targetId', { targetId: parent.id }),
       }
     );
+  },
+  last_week_timePieces: async ({ id }) => {
+    return Db.getTargetLastWeekTimePieces(id);
   },
 };

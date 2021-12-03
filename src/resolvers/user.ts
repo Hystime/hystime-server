@@ -1,4 +1,5 @@
 import { UserResolvers } from '../generated/types';
+import { Db } from '../db/db';
 
 export const User: UserResolvers = {
   id: async (parent, args, context, info) => {
@@ -12,5 +13,8 @@ export const User: UserResolvers = {
   },
   targets: async (parent, args, context, info) => {
     return parent.targets;
+  },
+  last_week_timePieces: async ({ id }, args, context, info) => {
+    return Db.getUserLastWeekTimePieces(id);
   },
 };

@@ -27,19 +27,19 @@ export class Db {
       { username },
       { relations: ['targets'] }
     );
-    return user ? DbUtils.entity2graph.user(user) : null;
+    return user ? DbUtils.eTGM.user(user) : null;
   }
 
   public static async getTarget(target_id: string): Promise<Target | null> {
     const target = await getConnection().manager.findOne(TargetEntity, { id: target_id });
-    return target ? DbUtils.entity2graph.target(target) : null;
+    return target ? DbUtils.eTGM.target(target) : null;
   }
 
   public static async createUser(input: UserCreateInput): Promise<User | null> {
     if ((await DbUtils.checkUser(input.username)) === undefined) {
       const userEntity = DbUtils.getUserEntity(input);
       await getConnection().manager.save(userEntity);
-      return DbUtils.entity2graph.user(userEntity);
+      return DbUtils.eTGM.user(userEntity);
     } else {
       return null;
     }
@@ -55,7 +55,7 @@ export class Db {
       return null;
     }
     await getConnection().manager.save(userEntity);
-    return DbUtils.entity2graph.user(userEntity);
+    return DbUtils.eTGM.user(userEntity);
   }
 
   public static async createTarget(
@@ -70,7 +70,7 @@ export class Db {
       const targetEntity = DbUtils.getTargetEntity(input);
       targetEntity.user = userEntity;
       await getConnection().manager.save(targetEntity);
-      return DbUtils.entity2graph.target(targetEntity);
+      return DbUtils.eTGM.target(targetEntity);
     }
     return null;
   }
@@ -88,7 +88,7 @@ export class Db {
         targetEntity.name = input.name;
       }
       await getConnection().manager.save(targetEntity);
-      return DbUtils.entity2graph.target(targetEntity);
+      return DbUtils.eTGM.target(targetEntity);
     } else {
       return null;
     }
@@ -204,10 +204,36 @@ export class Db {
       }
     );
   }
+
+  public static async getUserLastWeekTimePieces(user_id: string): Promise<TimePiece[]> {
+    return getConnection()
+      .getRepository(TimePieceEntity)
+      .createQueryBuilder('timePiece')
+      .innerJoinAndSelect('timePieces.targetId', 'target', 'target.userId = :userId', {
+        userId: user_id,
+      })
+      .where('timePiece.start > :start', {
+        start: new Date(new Date().getTime() - 7 * 24 * 60 * 60 * 1000),
+      })
+      .getMany();
+  }
+
+  public static async getTargetLastWeekTimePieces(target_id: string): Promise<TimePiece[]> {
+    return getConnection()
+      .getRepository(TimePieceEntity)
+      .createQueryBuilder('timePieces')
+      .where('timePieces.targetId = :targetId', { targetId: target_id })
+      .andWhere('timePieces.start >= :start', {
+        start: new Date(new Date().getTime() - 7 * 24 * 60 * 60 * 1000),
+      })
+      .orderBy('timePieces.start', 'DESC')
+      .getMany();
+  }
 }
 
 class DbUtils {
-  static entity2graph = class {
+  // entity to graphql model
+  static eTGM = class {
     public static user(entity: UserEntity): User {
       return {
         created_at: entity.created_at,
@@ -216,9 +242,10 @@ class DbUtils {
           entity.targets === undefined
             ? null
             : entity.targets
-                .map((value) => DbUtils.entity2graph.target(value))
+                .map((value) => DbUtils.eTGM.target(value))
                 .sort((a, b) => a.created_at.valueOf() - b.created_at.valueOf()),
         username: entity.username,
+        last_week_timePieces: null,
       };
     }
 
@@ -230,6 +257,7 @@ class DbUtils {
         type: entity.type,
         timeSpent: entity.timeSpent,
         timePieces: null, // Works as trick, timePieces resolver will not use data from parent. TODO: make this more graceful
+        last_week_timePieces: null,
       };
     }
   };
