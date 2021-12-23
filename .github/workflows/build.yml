@@ -73,4 +73,4 @@ jobs:
       - name: Sign the published Docker image
         env:
           COSIGN_EXPERIMENTAL: "true"
-        run: cosign sign ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}@master
+        run: cosign sign ghcr.io/hystime/hystime-server@master
