@@ -5,7 +5,7 @@ import { getConnection } from 'typeorm';
 import { Db } from '../db/db';
 
 export const TimePiece: TimePieceResolvers = {
-  async id(parent) {
+  id: async (parent) => {
     return parent.id;
   },
   start: async (parent) => {
