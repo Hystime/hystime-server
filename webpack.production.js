@@ -1,10 +1,7 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const WebpackBar = require('webpackbar');
-const { merge } = require('webpack-merge');
 const path = require('path');
-
-const common = require('./webpack.common.js');
 
 module.exports = {
   module: {
@@ -30,7 +27,7 @@ module.exports = {
             loader: 'webpack-graphql-loader',
             options: {
               output: 'string',
-              minify: true,
+              minify: false,
             },
           },
         ],
@@ -44,7 +41,7 @@ module.exports = {
   output: {
     filename: 'server.js',
     path: path.resolve(__dirname, 'dist'),
-    pathinfo: false,
+    pathinfo: true,
   },
   resolve: {
     extensions: ['.ts', '.js'],
