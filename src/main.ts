@@ -9,7 +9,7 @@ import entities from './entities';
 import * as fs from 'fs';
 import { makeExecutableSchema } from '@graphql-tools/schema';
 
-async function start(): Promise<void> {
+async function start(): Promise<string> {
   const tokenPath = '.token';
   let token: string;
 
@@ -67,6 +67,10 @@ async function start(): Promise<void> {
         if (userToken !== token) throw new AuthenticationError('Incorrect access token');
       }
     },
+    cors: {
+      origin: '*',
+      credentials: true,
+    },
   });
   const serverInfo = await server.listen({
     port: process.env.PORT || 4000,
@@ -74,6 +78,7 @@ async function start(): Promise<void> {
   });
 
   console.log(`Server ready at ${serverInfo.url}. `);
+  return token;
 }
 
-start().then(() => console.log('Server started'));
+start().then((token) => console.log(`Server started with token ${token}`));
