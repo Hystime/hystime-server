@@ -36,7 +36,7 @@ module.exports = {
   },
   devtool: false,
   entry: [path.join(__dirname, 'src/main.ts')],
-  mode: 'production',
+  mode: 'none',
   plugins: [new CleanWebpackPlugin(), new WebpackBar()],
   output: {
     filename: 'server.js',
