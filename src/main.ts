@@ -3,10 +3,11 @@ import { ConnectionOptions, createConnection } from 'typeorm';
 import { nanoid } from 'nanoid';
 
 import resolver from './resolvers';
-import schemas from './schemas';
+import typedefs from './typedef';
 import entities from './entities';
 
 import * as fs from 'fs';
+import { makeExecutableSchema } from 'graphql-tools';
 
 async function start(): Promise<void> {
   const tokenPath = '.token';
@@ -52,9 +53,13 @@ async function start(): Promise<void> {
 
   await createConnection(dbConfig);
 
-  const server = new ApolloServer({
-    typeDefs: schemas,
+  const schema = makeExecutableSchema({
+    typeDefs: typedefs,
     resolvers: resolver,
+  });
+
+  const server = new ApolloServer({
+    schema,
     context: ({ req }) => {
       const userToken = req.headers.Auth || '';
 
@@ -71,4 +76,4 @@ async function start(): Promise<void> {
   console.log(`Server ready at ${serverInfo.url}. `);
 }
 
-start();
+start().then(() => console.log('Server started'));
