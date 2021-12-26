@@ -7,6 +7,12 @@ module.exports = {
   module: {
     rules: [
       {
+        test: /\.m?js/,
+        resolve: {
+          fullySpecified: false,
+        },
+      },
+      {
         exclude: path.resolve(__dirname, 'node_modules'),
         test: /\.ts$/,
         use: [

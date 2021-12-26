@@ -6,4 +6,4 @@ import pagination from './typedefs/pagination.graphql';
 import { typeDefs as scalars } from 'graphql-scalars';
 import gql from 'graphql-tag';
 
-export default [typeDefs, query, inputs, mutations, pagination, ...scalars].map((str) => gql(str));
+export default gql([typeDefs, query, inputs, mutations, pagination, ...scalars].join('\n'));

@@ -7,7 +7,7 @@ import typedefs from './typedefs';
 import entities from './entities';
 
 import * as fs from 'fs';
-import { makeExecutableSchema } from 'graphql-tools';
+import { makeExecutableSchema } from '@graphql-tools/schema';
 
 async function start(): Promise<void> {
   const tokenPath = '.token';
