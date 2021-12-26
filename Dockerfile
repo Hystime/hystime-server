@@ -4,8 +4,9 @@ WORKDIR /app
 
 ENV NODE_ENV production
 
-RUN apk add --update nodejs
+ADD . /app
 
-ADD dist/server.js /app/server.js
+RUN apk add --update nodejs yarn && \
+    yarn install && yarn cache clean
 
-CMD node server.js
+CMD node /dist/server.js

@@ -1,56 +1,17 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
-const WebpackBar = require('webpackbar');
+const { merge } = require('webpack-merge');
+const nodeExternals = require('webpack-node-externals');
 const path = require('path');
+const common = require('./webpack.common.js');
+const WebpackBarPlugin = require("webpackbar");
 
-module.exports = {
-  module: {
-    rules: [
-      {
-        test: /\.m?js/,
-        resolve: {
-          fullySpecified: false,
-        },
-      },
-      {
-        exclude: path.resolve(__dirname, 'node_modules'),
-        test: /\.ts$/,
-        use: [
-          {
-            loader: 'ts-loader',
-            options: {
-              configFile: 'tsconfig.prod.json',
-              transpileOnly: true,
-            },
-          },
-        ],
-      },
-      {
-        exclude: path.resolve(__dirname, 'node_modules'),
-        test: /\.graphql?$/,
-        use: [
-          {
-            loader: 'webpack-graphql-loader',
-            options: {
-              output: 'string',
-              minify: false,
-            },
-          },
-        ],
-      },
-    ],
-  },
+// noinspection JSUnresolvedFunction,SpellCheckingInspection
+module.exports = merge(common, {
   devtool: false,
   entry: [path.join(__dirname, 'src/main.ts')],
-  mode: 'none',
-  plugins: [new CleanWebpackPlugin(), new WebpackBar()],
-  output: {
-    filename: 'server.js',
-    path: path.resolve(__dirname, 'dist'),
-    pathinfo: true,
-  },
-  resolve: {
-    extensions: ['.ts', '.js'],
-  },
+  externals: [nodeExternals()],
+  mode: 'production',
+  plugins: [new CleanWebpackPlugin(), new WebpackBarPlugin()],
   target: 'node',
-};
+});
