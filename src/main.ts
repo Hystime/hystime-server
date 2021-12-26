@@ -3,7 +3,7 @@ import { ConnectionOptions, createConnection } from 'typeorm';
 import { nanoid } from 'nanoid';
 
 import resolver from './resolvers';
-import typedefs from './typedef';
+import typedefs from './typedefs';
 import entities from './entities';
 
 import * as fs from 'fs';

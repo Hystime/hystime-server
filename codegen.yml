@@ -1,7 +1,7 @@
 overwrite: true
 schema:
-  - "./src/typedef/ref/scalars.ts"
-  - "./src/typedef/typedefs/*.graphql"
+  - "./src/typedefs/ref/scalars.ts"
+  - "./src/typedefs/typedefs/*.graphql"
 require:
   - ts-node/register
 hooks:
