@@ -72,6 +72,7 @@ async function start(): Promise<string> {
       origin: '*',
       credentials: true,
     },
+    introspection: true,
   });
   const serverInfo = await server.listen({
     port: process.env.PORT || 4000,
