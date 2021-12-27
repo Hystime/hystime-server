@@ -61,10 +61,11 @@ async function start(): Promise<string> {
   const server = new ApolloServer({
     schema,
     context: ({ req }) => {
-      const userToken = req.headers.Auth || '';
-
+      const userToken = req.headers.auth || '';
       if (process.env.NODE_ENV === 'production') {
         if (userToken !== token) throw new AuthenticationError('Incorrect access token');
+      } else {
+        if (userToken !== token) console.log(`error token ${userToken}`);
       }
     },
     cors: {
