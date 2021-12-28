@@ -21,8 +21,8 @@ async function start(): Promise<string> {
   if (exist) {
     token = fs.readFileSync(tokenPath).toString();
   } else {
-    if (process.env.token) {
-      token = process.env.token;
+    if (process.env['TOKEN']) {
+      token = process.env['TOKEN'];
     } else {
       token = nanoid(8);
       fs.writeFileSync(tokenPath, token);
