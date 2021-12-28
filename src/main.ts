@@ -21,8 +21,12 @@ async function start(): Promise<string> {
   if (exist) {
     token = fs.readFileSync(tokenPath).toString();
   } else {
-    token = nanoid(8);
-    fs.writeFileSync(tokenPath, token);
+    if (process.env.token) {
+      token = process.env.token;
+    } else {
+      token = nanoid(8);
+      fs.writeFileSync(tokenPath, token);
+    }
   }
 
   let dbConfig: ConnectionOptions;
