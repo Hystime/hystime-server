@@ -91,3 +91,4 @@ dist
 .token
 graphql.schema.json
 src/generated
+hystime.sqlite

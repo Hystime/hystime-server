@@ -30,14 +30,10 @@ async function start(): Promise<string> {
   }
 
   let dbConfig: ConnectionOptions;
-  if (process.env.NODE_ENV === 'development') {
+  if (process.env.NODE_ENV === 'development' || process.env.DEBUG) {
     dbConfig = {
-      type: 'mysql',
-      host: 'localhost',
-      port: 3306,
-      username: 'root',
-      password: '123456',
-      database: 'hystime',
+      type: 'sqlite',
+      database: 'hystime.sqlite',
       synchronize: true,
       entities: entities,
     };

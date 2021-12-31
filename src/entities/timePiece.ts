@@ -18,7 +18,7 @@ export class TimePieceEntity {
   @JoinColumn()
   target: TargetEntity;
 
-  @PrimaryColumn()
+  @Column()
   start: Date;
 
   @Column()
