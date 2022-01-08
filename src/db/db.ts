@@ -13,19 +13,23 @@ import {
   UserUpdateInput,
 } from '../generated/types';
 import { UserEntity } from '../entities/user';
-import { EntityTarget, getConnection, UpdateResult } from 'typeorm';
+import {
+  createQueryBuilder,
+  EntityTarget,
+  getConnection,
+  getManager,
+  getRepository,
+  UpdateResult,
+} from 'typeorm';
 import { TimePieceEntity } from '../entities/timePiece';
 import { TargetEntity } from '../entities/target';
 import { assertType } from '../utils';
 import { OrderDirection, paginate } from '../utils/pagination';
+import moment from 'moment';
 
 export class Db {
   public static async getUser(username: string): Promise<User> {
-    const user = await getConnection().manager.findOne(
-      UserEntity,
-      { username },
-      { relations: ['targets'] }
-    );
+    const user = await getManager().findOne(UserEntity, { username }, { relations: ['targets'] });
     if (!user) {
       throw Error('User not found.');
     }
@@ -33,7 +37,7 @@ export class Db {
   }
 
   public static async getTarget(target_id: string): Promise<Target> {
-    const target = await getConnection().manager.findOne(TargetEntity, { id: target_id });
+    const target = await getManager().findOne(TargetEntity, { id: target_id });
     if (!target) {
       throw Error('Target not found.');
     }
@@ -43,7 +47,7 @@ export class Db {
   public static async createUser(input: UserCreateInput): Promise<User> {
     if ((await DbUtils.checkUser(input.username)) === undefined) {
       const userEntity = DbUtils.getUserEntity(input);
-      await getConnection().manager.save(userEntity);
+      await getManager().save(userEntity);
       return DbUtils.eTGM.user(userEntity);
     } else {
       throw Error('Duplicate user.');
@@ -59,7 +63,7 @@ export class Db {
     } else {
       throw Error('User not found');
     }
-    await getConnection().manager.save(userEntity);
+    await getManager().save(userEntity);
     return DbUtils.eTGM.user(userEntity);
   }
 
@@ -71,7 +75,7 @@ export class Db {
       }
       const targetEntity = DbUtils.getTargetEntity(input);
       targetEntity.user = userEntity;
-      await getConnection().manager.save(targetEntity);
+      await getManager().save(targetEntity);
       return DbUtils.eTGM.target(targetEntity);
     }
     throw Error('User not found.');
@@ -86,7 +90,7 @@ export class Db {
       if (input.name) {
         targetEntity.name = input.name;
       }
-      await getConnection().manager.save(targetEntity);
+      await getManager().save(targetEntity);
       return DbUtils.eTGM.target(targetEntity);
     } else {
       throw Error('Target not found.');
@@ -96,8 +100,8 @@ export class Db {
   public static async deleteTarget(target_id: string): Promise<boolean> {
     const targetEntity = await DbUtils.checkEntityById(target_id, TargetEntity);
     if (targetEntity) {
-      await getConnection().manager.remove(targetEntity.timePieces);
-      await getConnection().manager.remove(targetEntity); // FIXME: use a transaction to delete in one operation
+      await getManager().remove(targetEntity.timePieces);
+      await getManager().remove(targetEntity); // FIXME: use a transaction to delete in one operation
       return true;
     }
     throw Error('Target not found.');
@@ -111,7 +115,7 @@ export class Db {
     if (targetEntity) {
       const timePieceEntity = DbUtils.getTimePieceEntity(input);
       timePieceEntity.target = targetEntity;
-      await getConnection().manager.save(timePieceEntity);
+      await getManager().save(timePieceEntity);
       await DbUtils.updateTimeSpent(target_id, input.duration);
       return timePieceEntity;
     } else {
@@ -134,7 +138,7 @@ export class Db {
       if (input.type) {
         timePieceEntity.type = input.type;
       }
-      await getConnection().manager.save(timePieceEntity);
+      await getManager().save(timePieceEntity);
       if (input.duration - timePieceEntity.duration !== 0) {
         await DbUtils.updateTimeSpent(
           timePieceEntity.target.id,
@@ -151,7 +155,7 @@ export class Db {
     const timePieceEntity = await DbUtils.checkEntityById(timepiece_id, TimePieceEntity);
     if (timePieceEntity) {
       await DbUtils.updateTimeSpent(timePieceEntity.target.id, -timePieceEntity.duration);
-      await getConnection().manager.remove(timePieceEntity);
+      await getManager().remove(timePieceEntity);
       return true;
     }
     throw Error('TimePiece not found');
@@ -165,7 +169,7 @@ export class Db {
     if (targetEntity) {
       const timePieceEntities = input.map((timePiece) => DbUtils.getTimePieceEntity(timePiece));
       timePieceEntities.forEach((timePiece) => (timePiece.target = targetEntity));
-      await getConnection().manager.save(timePieceEntities);
+      await getManager().save(timePieceEntities);
       await DbUtils.updateTimeSpent(
         target_id,
         timePieceEntities.map((timePiece) => timePiece.duration).reduce((a, b) => a + b, 0)
@@ -229,6 +233,74 @@ export class Db {
       .orderBy('timePieces.start', 'DESC')
       .getMany();
   }
+
+  public static async getUserPomodoroCount(id: string): Promise<number> {
+    return createQueryBuilder('timePiece')
+      .innerJoinAndSelect('timePieces.targetId', 'target', 'target.userId = :userId', {
+        userId: id,
+      })
+      .where('timePiece.type = :type', { type: TimePieceType.Pomodoro })
+      .getCount();
+  }
+
+  public static async getUserTodayPomodoroCount(id: string): Promise<number> {
+    return createQueryBuilder('timePiece')
+      .innerJoinAndSelect('timePieces.targetId', 'target', 'target.userId = :userId', {
+        userId: id,
+      })
+      .where('timePiece.type = :type', { type: TimePieceType.Pomodoro })
+      .andWhere('timePiece.start >= :start', {
+        start: moment().startOf('days').toDate(),
+      })
+      .getCount();
+  }
+
+  public static async getUserTodayTimeSpent(id: string): Promise<number> {
+    return (
+      await getRepository(TimePieceEntity)
+        .createQueryBuilder('timePiece')
+        .innerJoinAndSelect('timePieces.targetId', 'target', 'target.userId = :userId', {
+          userId: id,
+        })
+        .where('timePiece.start >= :start', {
+          start: moment().startOf('days').toDate(),
+        })
+        .getMany()
+    ).reduce((pre, cur) => pre + cur.duration, 0);
+  }
+
+  public static async getTargetTodayTimeSpent(id: string): Promise<number> {
+    return (
+      await getRepository(TimePieceEntity)
+        .createQueryBuilder('timePiece')
+        .where('timePiece.targetId = :targetId', { targetId: id })
+        .andWhere('timePiece.start >= :start', {
+          start: moment().startOf('days').toDate(),
+        })
+        .getMany()
+    ).reduce((pre, cur) => pre + cur.duration, 0);
+  }
+
+  public static async getTargetPomodoroCount(id: string): Promise<number> {
+    return createQueryBuilder('timePiece')
+      .innerJoinAndSelect('timePieces.targetId', 'target', 'target.userId = :userId', {
+        userId: id,
+      })
+      .where('timePiece.type = :type', { type: TimePieceType.Pomodoro })
+      .getCount();
+  }
+
+  public static async getTargetTodayPomodoroCount(id: string): Promise<number> {
+    return createQueryBuilder('timePiece')
+      .innerJoinAndSelect('timePieces.targetId', 'target', 'target.userId = :userId', {
+        userId: id,
+      })
+      .where('timePiece.type = :type', { type: TimePieceType.Pomodoro })
+      .andWhere('timePiece.start >= :start', {
+        start: moment().startOf('days').toDate(),
+      })
+      .getCount();
+  }
 }
 
 class DbUtils {
@@ -238,6 +310,10 @@ class DbUtils {
       return {
         created_at: entity.created_at,
         id: entity.id,
+        pomodoroCount: null,
+        timeSpent: null,
+        todayPomodoroCount: null,
+        todayTimeSpent: null,
         targets:
           entity.targets === undefined
             ? null
@@ -251,6 +327,9 @@ class DbUtils {
 
     public static target(entity: TargetEntity): Target {
       return {
+        pomodoroCount: null,
+        todayPomodoroCount: null,
+        todayTimeSpent: null,
         created_at: entity.created_at,
         id: entity.id,
         name: entity.name,
@@ -264,8 +343,8 @@ class DbUtils {
 
   // Username can not be duplicate
   public static async checkUser(username: string): Promise<undefined | UserEntity> {
-    const userRepo = getConnection().getRepository(UserEntity);
-    return await userRepo.findOne({ username: username });
+    const userRepo = getRepository(UserEntity);
+    return userRepo.findOne({ username: username });
   }
 
   public static async checkTarget(
@@ -273,7 +352,7 @@ class DbUtils {
     name: string
   ): Promise<undefined | TargetEntity> {
     const targetRepo = getConnection().getRepository(TargetEntity);
-    return await targetRepo.findOne({ name: name, user });
+    return targetRepo.findOne({ name: name, user });
   }
 
   public static async checkEntityById<T>(
@@ -282,7 +361,7 @@ class DbUtils {
   ): Promise<T | undefined> {
     const repo = getConnection().getRepository(type);
     // @ts-ignore manually assume id exist
-    return await repo.findOne({ id });
+    return repo.findOne({ id });
   }
 
   // Believe input is always valid.
@@ -333,7 +412,7 @@ class DbUtils {
   }
 
   public static updateTimeSpent(target_id: string, timeChange: number): Promise<UpdateResult> {
-    const repo = getConnection().getRepository(TargetEntity);
+    const repo = getRepository(TargetEntity);
     if (timeChange > 0) {
       return repo.increment({ id: target_id }, 'timeSpent', timeChange);
     } else {

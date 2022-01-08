@@ -25,6 +25,19 @@ type User{
 
     """Timepieces in the last week"""
     last_week_timePieces: [TimePiece!]!
+
+    """Total focus time length"""
+    timeSpent: Int!
+
+    """Today focus time length"""
+    todayTimeSpent: Int!
+
+    """Total pomodoro count"""
+    pomodoroCount: Int!
+
+    """Today pomodoro count"""
+    todayPomodoroCount: Int!
+
 }
 
 """One Target"""
@@ -48,8 +61,17 @@ type Target{
     """Consumption time periods"""
     timePieces(first: Int!, after: String): TimePieceConnection!
 
+    """Timepieces in the last week"""
     last_week_timePieces: [TimePiece!]!
 
+    """Today focus time length"""
+    todayTimeSpent: Int!
+
+    """Total pomodoro count"""
+    pomodoroCount: Int!
+
+    """Today pomodoro count"""
+    todayPomodoroCount: Int!
 }
 
 type TimePieceEdge {

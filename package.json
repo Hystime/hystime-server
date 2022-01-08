@@ -30,7 +30,6 @@
     "@graphql-codegen/typescript-document-nodes": "2.2.1",
     "@graphql-codegen/typescript-resolvers": "2.4.2",
     "@graphql-tools/schema": "^8.3.1",
-    "@types/lodash": "^4.14.178",
     "@types/node": "^17.0.4",
     "@types/webpack-env": "^1.16.3",
     "@typescript-eslint/eslint-plugin": "^5.8.0",
@@ -43,7 +42,7 @@
     "graphql": "^16.2.0",
     "graphql-scalars": "1.14.1",
     "graphql-tag": "^2.12.6",
-    "lodash": "^4.17.21",
+    "moment": "^2.29.1",
     "mysql2": "^2.3.3",
     "nanoid": "^3.1.30",
     "node-ts": "^5.1.2",
@@ -63,5 +62,18 @@
   },
   "resolutions": {
     "graphql": "^16.2.0"
+  },
+  "dependencies": {
+    "@graphql-tools/schema": "^8.3.1",
+    "apollo-server": "^3.5.0",
+    "graphql": "^16.2.0",
+    "graphql-scalars": "1.14.1",
+    "graphql-tag": "^2.12.6",
+    "moment": "^2.29.1",
+    "mysql2": "^2.3.3",
+    "nanoid": "^3.1.30",
+    "opaqueid": "^1.2.0",
+    "sqlite3": "^5.0.2",
+    "typeorm": "^0.2.41"
   }
 }

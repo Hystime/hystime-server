@@ -35,6 +35,9 @@ export const Target: TargetResolvers = {
   timeSpent: async (parent) => {
     return parent.timeSpent;
   },
+  todayTimeSpent: async ({ id }) => {
+    return Db.getTargetTodayTimeSpent(id);
+  },
   timePieces: async (parent, { first, after }) => {
     return paginate(
       {
@@ -59,5 +62,11 @@ export const Target: TargetResolvers = {
   },
   last_week_timePieces: async ({ id }) => {
     return Db.getTargetLastWeekTimePieces(id);
+  },
+  pomodoroCount: async ({ id }) => {
+    return Db.getTargetPomodoroCount(id);
+  },
+  todayPomodoroCount: async ({ id }) => {
+    return Db.getTargetTodayPomodoroCount(id);
   },
 };
