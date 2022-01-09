@@ -13,6 +13,8 @@ ADD ./.yarn/releases /app/.yarn/releases
 ADD ./LICENSE /app/LICENSE
 
 RUN apk add --update nodejs yarn && \
-    yarn workspaces focus --production && yarn cache clean && apk del yarn
+    yarn workspaces focus --production && \
+    apk del yarn && \
+    rm -rf .yarn/ yarn.lock .yarnrc.yml package.json
 
 CMD node server.js
