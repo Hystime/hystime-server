@@ -10,6 +10,7 @@ COPY package.json .
 COPY yarn.lock .
 
 RUN apk add --update nodejs yarn && \
+    echo "nodeLinker: node-modules" >> .yarnrc.yml && \
     yarn set version berry && \
     yarn plugin import workspace-tools && \
     yarn workspaces focus --production && \
