@@ -4,9 +4,11 @@ WORKDIR /app
 
 ENV NODE_ENV production
 
-ADD . /app
+ADD ./dist/server.js /app/server.js
+ADD ./package.json /app/package.json
+ADD ./LICENSE /app/LICENSE
 
 RUN apk add --update nodejs yarn && \
     yarn workspaces focus --production && yarn cache clean && apk del yarn
 
-CMD node dist/server.js
+CMD node server.js
