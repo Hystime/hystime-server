@@ -4,12 +4,12 @@ WORKDIR /app
 
 ENV NODE_ENV production
 
-COPY dist/server.js .
-COPY package.json .
-COPY yarn.lock .
 COPY .yarnrc.yml .
 COPY .yarn .yarn/
 COPY LICENSE .
+COPY dist/server.js .
+COPY package.json .
+COPY yarn.lock .
 
 RUN apk add --update nodejs yarn && \
     yarn workspaces focus --production && \
