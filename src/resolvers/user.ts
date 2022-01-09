@@ -14,7 +14,7 @@ export const User: UserResolvers = {
   targets: async (parent) => {
     return parent.targets;
   },
-  last_week_timePieces: async ({ id }) => {
+  lastWeekTimePieces: async ({ id }) => {
     return Db.getUserLastWeekTimePieces(id);
   },
   pomodoroCount: async ({ id }) => {

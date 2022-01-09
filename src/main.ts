@@ -48,6 +48,12 @@ async function start(): Promise<string> {
     });
 
     type supportedDatabase = 'mysql' | 'mariadb' | 'postgres';
+    if (
+      process.env['DB_TYPE'] &&
+      !['mysql', 'mariadb', 'postgres'].includes(process.env['DB_TYPE'])
+    ) {
+      throw new Error(`Unsupported database ${process.env['DB_TYPE']}`);
+    }
     dbConfig = {
       type: (process.env['DB_TYPE'] as supportedDatabase) || 'mysql',
       host: process.env['DB_HOST'] || 'localhost',

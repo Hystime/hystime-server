@@ -321,7 +321,7 @@ class DbUtils {
                 .map((value) => DbUtils.eTGM.target(value))
                 .sort((a, b) => a.created_at.valueOf() - b.created_at.valueOf()),
         username: entity.username,
-        last_week_timePieces: null,
+        lastWeekTimePieces: null,
       };
     }
 
@@ -336,7 +336,7 @@ class DbUtils {
         type: entity.type,
         timeSpent: entity.timeSpent,
         timePieces: null, // Works as trick, timePieces resolver will not use data from parent. TODO: make this more graceful
-        last_week_timePieces: null,
+        lastWeekTimePieces: null,
       };
     }
   };

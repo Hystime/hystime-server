@@ -60,7 +60,7 @@ export const Target: TargetResolvers = {
       }
     );
   },
-  last_week_timePieces: async ({ id }) => {
+  lastWeekTimePieces: async ({ id }) => {
     return Db.getTargetLastWeekTimePieces(id);
   },
   pomodoroCount: async ({ id }) => {

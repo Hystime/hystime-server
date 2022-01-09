@@ -24,7 +24,7 @@ type User{
     targets: [Target!]
 
     """Timepieces in the last week"""
-    last_week_timePieces: [TimePiece!]!
+    lastWeekTimePieces: [TimePiece!]!
 
     """Total focus time length"""
     timeSpent: Int!
@@ -62,7 +62,7 @@ type Target{
     timePieces(first: Int!, after: String): TimePieceConnection!
 
     """Timepieces in the last week"""
-    last_week_timePieces: [TimePiece!]!
+    lastWeekTimePieces: [TimePiece!]!
 
     """Today focus time length"""
     todayTimeSpent: Int!
