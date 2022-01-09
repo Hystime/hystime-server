@@ -88,6 +88,6 @@ dist
 !.yarn/versions
 
 .token
+.debug
 graphql.schema.json
 src/generated
-hystime.sqlite

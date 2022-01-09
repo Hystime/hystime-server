@@ -8,18 +8,17 @@ import entities from './entities';
 
 import * as fs from 'fs';
 import { makeExecutableSchema } from '@graphql-tools/schema';
+import { fileExist } from './utils';
+import { createDebugData } from './debug';
 
 async function start(): Promise<string> {
   const tokenPath = '.token';
   let token: string;
 
-  const exist = await new Promise((resolve) => {
-    fs.exists(tokenPath, (exists) => {
-      resolve(exists);
-    });
-  });
-  if (exist) {
-    token = fs.readFileSync(tokenPath).toString();
+  const tokenExist = await fileExist(tokenPath);
+
+  if (tokenExist) {
+    token = fs.readFileSync(tokenPath).toString().trim();
   } else {
     if (process.env['TOKEN']) {
       token = process.env['TOKEN'];
@@ -32,12 +31,22 @@ async function start(): Promise<string> {
   let dbConfig: ConnectionOptions;
   if (process.env.NODE_ENV === 'development' || process.env.DEBUG) {
     dbConfig = {
-      type: 'sqlite',
-      database: 'hystime.sqlite',
+      type: 'mysql',
+      host: process.env.DEBUG ? '172.17.0.1' : 'localhost',
+      port: Number(process.env['DB_PORT']) || 3306,
+      username: process.env['DB_USERNAME'] || 'root',
+      password: process.env['DB_USERPWD'] || '123456',
+      database: process.env['DB_NAME'] || 'hystime',
       synchronize: true,
       entities: entities,
     };
   } else {
+    ['DB_USERNAME', 'DB_USERPWD', 'DB_NAME'].forEach((key) => {
+      if (!process.env[key]) {
+        throw new Error(`${key} is not defined`);
+      }
+    });
+
     type supportedDatabase = 'mysql' | 'mariadb' | 'postgres';
     dbConfig = {
       type: (process.env['DB_TYPE'] as supportedDatabase) || 'mysql',
@@ -53,6 +62,8 @@ async function start(): Promise<string> {
 
   await createConnection(dbConfig);
 
+  await createDebugData();
+
   const schema = makeExecutableSchema({
     typeDefs: typedefs,
     resolvers: resolver,
@@ -65,7 +76,9 @@ async function start(): Promise<string> {
       if (process.env.NODE_ENV === 'production') {
         if (userToken !== token) throw new AuthenticationError('Incorrect access token');
       } else {
-        if (userToken !== token) console.log(`error token ${userToken}`);
+        if (userToken !== token) {
+          console.log(`error token ${userToken} not same as ${token}`);
+        }
       }
     },
     cors: {

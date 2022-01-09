@@ -7,16 +7,11 @@ const webpack = require('webpack');
 
 const common = require('./webpack.common.js');
 
-// noinspection JSUnresolvedFunction,SpellCheckingInspection
 module.exports = merge(common, {
   devtool: 'inline-source-map',
-  entry: ['webpack/hot/poll?1000', path.join(__dirname, 'src/main.ts')],
-  externals: [
-    nodeExternals({
-      allowlist: ['webpack/hot/poll?1000'],
-    }),
-  ],
+  entry: [path.join(__dirname, 'src/main.ts')],
+  externals: [nodeExternals()],
   mode: 'development',
-  plugins: [new CleanWebpackPlugin(), new webpack.HotModuleReplacementPlugin()],
+  plugins: [new CleanWebpackPlugin()],
   watch: true,
 });

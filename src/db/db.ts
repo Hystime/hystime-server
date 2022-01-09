@@ -213,11 +213,11 @@ export class Db {
     return getConnection()
       .getRepository(TimePieceEntity)
       .createQueryBuilder('timePiece')
-      .innerJoinAndSelect('timePieces.targetId', 'target', 'target.userId = :userId', {
+      .innerJoinAndSelect('timePiece.target', 'target', 'target.user = :userId', {
         userId: user_id,
       })
-      .where('timePiece.start > :start', {
-        start: new Date(new Date().getTime() - 7 * 24 * 60 * 60 * 1000),
+      .where('timePiece.start >= :start', {
+        start: moment().subtract(6, 'days').startOf('days').toDate(),
       })
       .getMany();
   }
@@ -225,18 +225,18 @@ export class Db {
   public static async getTargetLastWeekTimePieces(target_id: string): Promise<TimePiece[]> {
     return getConnection()
       .getRepository(TimePieceEntity)
-      .createQueryBuilder('timePieces')
-      .where('timePieces.targetId = :targetId', { targetId: target_id })
-      .andWhere('timePieces.start >= :start', {
-        start: new Date(new Date().getTime() - 7 * 24 * 60 * 60 * 1000),
+      .createQueryBuilder('timePiece')
+      .where('timePiece.target = :targetId', { targetId: target_id })
+      .andWhere('timePiece.start >= :start', {
+        start: moment().subtract(6, 'days').startOf('days').toDate(),
       })
-      .orderBy('timePieces.start', 'DESC')
+      .orderBy('timePiece.start', 'DESC')
       .getMany();
   }
 
   public static async getUserPomodoroCount(id: string): Promise<number> {
-    return createQueryBuilder('timePiece')
-      .innerJoinAndSelect('timePieces.targetId', 'target', 'target.userId = :userId', {
+    return createQueryBuilder(TimePieceEntity, 'timePiece')
+      .innerJoinAndSelect('timePiece.target', 'target', 'target.user = :userId', {
         userId: id,
       })
       .where('timePiece.type = :type', { type: TimePieceType.Pomodoro })
@@ -244,8 +244,8 @@ export class Db {
   }
 
   public static async getUserTodayPomodoroCount(id: string): Promise<number> {
-    return createQueryBuilder('timePiece')
-      .innerJoinAndSelect('timePieces.targetId', 'target', 'target.userId = :userId', {
+    return createQueryBuilder(TimePieceEntity, 'timePiece')
+      .innerJoinAndSelect('timePiece.target', 'target', 'target.user = :userId', {
         userId: id,
       })
       .where('timePiece.type = :type', { type: TimePieceType.Pomodoro })
@@ -259,7 +259,7 @@ export class Db {
     return (
       await getRepository(TimePieceEntity)
         .createQueryBuilder('timePiece')
-        .innerJoinAndSelect('timePieces.targetId', 'target', 'target.userId = :userId', {
+        .innerJoinAndSelect('timePiece.target', 'target', 'target.user = :userId', {
           userId: id,
         })
         .where('timePiece.start >= :start', {
@@ -282,8 +282,8 @@ export class Db {
   }
 
   public static async getTargetPomodoroCount(id: string): Promise<number> {
-    return createQueryBuilder('timePiece')
-      .innerJoinAndSelect('timePieces.targetId', 'target', 'target.userId = :userId', {
+    return createQueryBuilder(TimePieceEntity, 'timePiece')
+      .innerJoinAndSelect('timePiece.target', 'target', 'target.user = :userId', {
         userId: id,
       })
       .where('timePiece.type = :type', { type: TimePieceType.Pomodoro })
@@ -291,8 +291,8 @@ export class Db {
   }
 
   public static async getTargetTodayPomodoroCount(id: string): Promise<number> {
-    return createQueryBuilder('timePiece')
-      .innerJoinAndSelect('timePieces.targetId', 'target', 'target.userId = :userId', {
+    return createQueryBuilder(TimePieceEntity, 'timePiece')
+      .innerJoinAndSelect('timePiece.target', 'target', 'target.user = :userId', {
         userId: id,
       })
       .where('timePiece.type = :type', { type: TimePieceType.Pomodoro })
