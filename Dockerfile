@@ -6,6 +6,10 @@ ENV NODE_ENV production
 
 ADD ./dist/server.js /app/server.js
 ADD ./package.json /app/package.json
+ADD ./yarn.lock /app/yarn.lock
+ADD ./.yarnrc /app/.yarnrc
+ADD ./.yarn/plugins /app/.yarn/plugins
+ADD ./.yarn/releases /app/.yarn/releases
 ADD ./LICENSE /app/LICENSE
 
 RUN apk add --update nodejs yarn && \
