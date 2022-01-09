@@ -29,4 +29,7 @@ export const User: UserResolvers = {
   todayTimeSpent: async ({ id }) => {
     return Db.getUserTodayTimeSpent(id);
   },
+  timePieces: async ({ id }, { first, after }) => {
+    return Db.getUserTimepieces(id, first, after);
+  },
 };

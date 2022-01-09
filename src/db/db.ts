@@ -180,7 +180,7 @@ export class Db {
     }
   }
 
-  public static async getTimepieces(
+  public static async getUserTimepieces(
     user_id: string,
     first: number,
     after: string | null | undefined
@@ -198,13 +198,38 @@ export class Db {
         type: 'TimePieceEntity',
         alias: 'timePieces',
         validateCursor: true,
-        orderFieldToKey: (field) => field,
         queryBuilder: getConnection()
           .getRepository(TimePieceEntity)
           .createQueryBuilder('timePieces')
           .innerJoinAndSelect('timePieces.targetId', 'target', 'target.userId = :userId', {
             userId: user_id,
           }),
+      }
+    );
+  }
+
+  public static async getTargetTimePieces(
+    target_id: string,
+    first: number,
+    after: string | null | undefined
+  ): Promise<TimePieceConnection> {
+    return paginate(
+      {
+        first,
+        after,
+        orderBy: {
+          direction: OrderDirection.DESC,
+          field: 'start',
+        },
+      },
+      {
+        type: 'TimePieceEntity',
+        alias: 'timePieces',
+        validateCursor: true,
+        queryBuilder: getConnection()
+          .getRepository(TimePieceEntity)
+          .createQueryBuilder('timePieces')
+          .where('timePieces.targetId = :targetId', { targetId: target_id }),
       }
     );
   }
@@ -322,6 +347,7 @@ class DbUtils {
                 .sort((a, b) => a.created_at.valueOf() - b.created_at.valueOf()),
         username: entity.username,
         lastWeekTimePieces: null,
+        timePieces: null,
       };
     }
 

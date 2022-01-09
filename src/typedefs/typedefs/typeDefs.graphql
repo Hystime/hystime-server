@@ -38,6 +38,8 @@ type User{
     """Today pomodoro count"""
     todayPomodoroCount: Int!
 
+    """Consumption time periods"""
+    timePieces(first: Int!, after: String): TimePieceConnection!
 }
 
 """One Target"""

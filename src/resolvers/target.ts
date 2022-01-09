@@ -1,7 +1,4 @@
 import { TargetResolvers, TimePieceResolvers } from '../generated/types';
-import { OrderDirection, paginate } from '../utils/pagination';
-import { TimePieceEntity } from '../entities/timePiece';
-import { getConnection } from 'typeorm';
 import { Db } from '../db/db';
 
 export const TimePiece: TimePieceResolvers = {
@@ -38,27 +35,8 @@ export const Target: TargetResolvers = {
   todayTimeSpent: async ({ id }) => {
     return Db.getTargetTodayTimeSpent(id);
   },
-  timePieces: async (parent, { first, after }) => {
-    return paginate(
-      {
-        first,
-        after,
-        orderBy: {
-          direction: OrderDirection.DESC,
-          field: 'start',
-        },
-      },
-      {
-        type: 'TimePieceEntity',
-        alias: 'timePieces',
-        validateCursor: true,
-        orderFieldToKey: (field) => field,
-        queryBuilder: getConnection()
-          .getRepository(TimePieceEntity)
-          .createQueryBuilder('timePieces')
-          .where('timePieces.targetId = :targetId', { targetId: parent.id }),
-      }
-    );
+  timePieces: async ({ id }, { first, after }) => {
+    return Db.getTargetTimePieces(id, first, after);
   },
   lastWeekTimePieces: async ({ id }) => {
     return Db.getTargetLastWeekTimePieces(id);

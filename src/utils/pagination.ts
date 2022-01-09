@@ -191,7 +191,7 @@ export interface PaginateOptions<Entity extends Object, OrderField = string> {
   /**
    * A function to convert an order field string or enum to a field name.
    */
-  orderFieldToKey: (orderField: OrderField) => string;
+  orderFieldToKey?: (orderField: OrderField) => string;
   /**
    * The TypeORM query build.
    */
@@ -238,7 +238,9 @@ export async function paginate<Entity extends ObjectLiteral, OrderField>(
 
   // Order by the requested order
   // Use the provided function to convert the user-facing field name to the actual field name
-  const field = options.orderFieldToKey(findOptions.orderBy.field);
+  const field = options.orderFieldToKey
+    ? options.orderFieldToKey(findOptions.orderBy.field)
+    : findOptions.orderBy.field;
   // Use the alias and the field name to generate the order key
   const key = `${options.alias}.${field}`;
   // Order by the field and direction
