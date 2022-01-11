@@ -3,6 +3,7 @@ const { merge } = require('webpack-merge');
 const common = require('./webpack.common.js');
 const path = require('path');
 
+// noinspection JSCheckFunctionSignatures
 module.exports = merge(common, {
   devtool: 'source-map',
   module: {
