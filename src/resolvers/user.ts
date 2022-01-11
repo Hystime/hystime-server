@@ -11,6 +11,9 @@ export const User: UserResolvers = {
   created_at: async (parent) => {
     return parent.created_at;
   },
+  target: async ({ id: userID }, { id: targetID }) => {
+    return Db.getTarget(userID, targetID);
+  },
   targets: async (parent) => {
     return parent.targets;
   },

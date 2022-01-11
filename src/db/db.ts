@@ -36,8 +36,10 @@ export class Db {
     return DbUtils.eTGM.user(user);
   }
 
-  public static async getTarget(target_id: string): Promise<Target> {
-    const target = await getManager().findOne(TargetEntity, { id: target_id });
+  public static async getTarget(user_id: string, target_id: string): Promise<Target> {
+    const target = await getManager().findOne(TargetEntity, {
+      where: { id: target_id, user: user_id },
+    });
     if (!target) {
       throw Error('Target not found.');
     }
@@ -335,17 +337,18 @@ class DbUtils {
       return {
         created_at: entity.created_at,
         id: entity.id,
-        pomodoroCount: null,
-        timeSpent: null,
-        todayPomodoroCount: null,
-        todayTimeSpent: null,
+        username: entity.username,
         targets:
           entity.targets === undefined
             ? null
             : entity.targets
                 .map((value) => DbUtils.eTGM.target(value))
                 .sort((a, b) => a.created_at.valueOf() - b.created_at.valueOf()),
-        username: entity.username,
+        pomodoroCount: null,
+        timeSpent: null,
+        todayPomodoroCount: null,
+        todayTimeSpent: null,
+        target: null,
         lastWeekTimePieces: null,
         timePieces: null,
       };
@@ -353,9 +356,6 @@ class DbUtils {
 
     public static target(entity: TargetEntity): Target {
       return {
-        pomodoroCount: null,
-        todayPomodoroCount: null,
-        todayTimeSpent: null,
         created_at: entity.created_at,
         id: entity.id,
         name: entity.name,
@@ -363,6 +363,9 @@ class DbUtils {
         timeSpent: entity.timeSpent,
         timePieces: null, // Works as trick, timePieces resolver will not use data from parent. TODO: make this more graceful
         lastWeekTimePieces: null,
+        pomodoroCount: null,
+        todayPomodoroCount: null,
+        todayTimeSpent: null,
       };
     }
   };

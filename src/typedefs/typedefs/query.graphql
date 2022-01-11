@@ -4,7 +4,4 @@ type Query{
 
     """Try to find one user"""
     user(username:String!):User
-
-    """Try to find one target"""
-    target(target_id:ID!):Target
 }

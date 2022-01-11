@@ -6,7 +6,4 @@ export const Query: QueryResolvers = {
   user: async (parent: any, { username }): Promise<User | null> => {
     return Db.getUser(username);
   },
-  target: async (parent: any, { target_id }): Promise<Target | null> => {
-    return Db.getTarget(target_id);
-  },
 };
