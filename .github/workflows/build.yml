@@ -36,7 +36,7 @@ jobs:
           name: build
           path: |
             dist/server.js
-            dist/server.js.LICENSE.txt
+            dist/server.js.map
             graphql.schema.json
 
       - name: Setup Docker buildx
