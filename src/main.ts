@@ -1,15 +1,22 @@
 import { ApolloServer, AuthenticationError } from 'apollo-server';
 import { ConnectionOptions, createConnection } from 'typeorm';
+import { makeExecutableSchema } from '@graphql-tools/schema';
+import sourceMapSupport from 'source-map-support';
 import { nanoid } from 'nanoid';
+import * as fs from 'fs';
 
 import resolver from './resolvers';
 import typedefs from './typedefs';
 import entities from './entities';
 
-import * as fs from 'fs';
-import { makeExecutableSchema } from '@graphql-tools/schema';
-import { fileExist } from './utils';
+import { fileExist, isDebug } from './utils';
 import { createDebugData } from './debug';
+
+sourceMapSupport.install({
+  environment: 'node',
+  handleUncaughtExceptions: true,
+  hookRequire: isDebug(),
+});
 
 async function start(): Promise<string> {
   const tokenPath = '.token';

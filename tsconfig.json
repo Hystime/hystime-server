@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "target": "es6",
+    "target": "es2020",
     "lib": [
       "dom",
       "es6"
@@ -15,7 +15,7 @@
     "declaration": true,
     "declarationMap": true,
     "sourceMap": true,
-    "inlineSources": true,
+    "incremental": true,
     "strictPropertyInitialization": false,
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
@@ -25,7 +25,7 @@
     "strictNullChecks": false,
     "noImplicitAny": true,
     "noImplicitThis": true,
-    "skipLibCheck": false,
+    "skipLibCheck": false
   },
   "exclude": [
     "node_modules"

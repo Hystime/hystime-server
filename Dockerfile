@@ -6,6 +6,7 @@ ENV NODE_ENV production
 
 COPY LICENSE .
 COPY dist/server.js .
+COPY dist/server.js.map .
 COPY package.json .
 COPY yarn.lock .
 

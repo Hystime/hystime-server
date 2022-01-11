@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "target": "es6",
+    "target": "es2020",
     "lib": [
       "dom",
       "es6"
@@ -14,8 +14,7 @@
     "noImplicitReturns": true,
     "declaration": false,
     "declarationMap": false,
-    "sourceMap": false,
-    "inlineSources": false,
+    "sourceMap": true,
     "strictPropertyInitialization": false,
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
