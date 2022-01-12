@@ -39,7 +39,7 @@ async function start(): Promise<string> {
   if (process.env.NODE_ENV === 'development' || process.env.DEBUG) {
     dbConfig = {
       type: 'mysql',
-      host: process.env.DEBUG ? '172.17.0.1' : 'localhost',
+      host: process.env['DB_HOST'] || process.env.DEBUG ? '172.17.0.1' : 'localhost',
       port: Number(process.env['DB_PORT']) || 3306,
       username: process.env['DB_USERNAME'] || 'root',
       password: process.env['DB_USERPWD'] || '123456',
