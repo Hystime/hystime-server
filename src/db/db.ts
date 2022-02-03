@@ -309,20 +309,18 @@ export class Db {
   }
 
   public static async getTargetPomodoroCount(id: string): Promise<number> {
-    return createQueryBuilder(TimePieceEntity, 'timePiece')
-      .innerJoinAndSelect('timePiece.target', 'target', 'target.user = :userId', {
-        userId: id,
-      })
-      .where('timePiece.type = :type', { type: TimePieceType.Pomodoro })
+    return getRepository(TimePieceEntity)
+      .createQueryBuilder('timePiece')
+      .where('timePiece.target = :targetId', { targetId: id })
+      .andWhere('timePiece.type = :type', { type: TimePieceType.Pomodoro })
       .getCount();
   }
 
   public static async getTargetTodayPomodoroCount(id: string): Promise<number> {
-    return createQueryBuilder(TimePieceEntity, 'timePiece')
-      .innerJoinAndSelect('timePiece.target', 'target', 'target.user = :userId', {
-        userId: id,
-      })
-      .where('timePiece.type = :type', { type: TimePieceType.Pomodoro })
+    return getRepository(TimePieceEntity)
+      .createQueryBuilder('timePiece')
+      .where('timePiece.target = :targetId', { targetId: id })
+      .andWhere('timePiece.type = :type', { type: TimePieceType.Pomodoro })
       .andWhere('timePiece.start >= :start', {
         start: moment().startOf('days').toDate(),
       })
