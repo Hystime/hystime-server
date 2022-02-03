@@ -1,19 +1,24 @@
 import * as fs from 'fs';
-import { fileExist, isDebug } from './utils';
+import { isDebug } from './utils';
 import { Db } from './db/db';
 
 import * as faker from 'faker';
 import { TargetType, TimePieceType } from './generated/types';
+import { getConnection } from 'typeorm';
+import { UserEntity } from './entities/user';
+
+async function isDatabaseEmpty(): Promise<boolean> {
+  const result = await getConnection().getRepository(UserEntity).count();
+  return result === 0;
+}
 
 export async function createDebugData(): Promise<void> {
   if (!isDebug()) {
     return;
   }
-  if (await fileExist('.debug')) {
+  if (!(await isDatabaseEmpty())) {
     return;
   }
-
-  fs.writeFileSync('.debug', 'debug');
 
   console.info('Creating fake data.');
 
