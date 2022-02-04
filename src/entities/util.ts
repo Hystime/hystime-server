@@ -28,7 +28,11 @@ export function serverUrl(info: ServerInfo): string {
   const url = info.url;
   if (isDebug()) {
     if (host === '0.0.0.0' || host === '::') {
-      console.info(getIPAddress());
+      const ips = getIPAddress();
+      const local_ips = ips.filter((ip) => ip.startsWith('192.168') || ip.startsWith('172.16'));
+      if (local_ips.length > 0) {
+        return url.replace(host, local_ips[0]);
+      }
     }
   }
   return url;
