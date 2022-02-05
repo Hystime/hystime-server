@@ -203,7 +203,7 @@ export class Db {
         queryBuilder: getConnection()
           .getRepository(TimePieceEntity)
           .createQueryBuilder('timePieces')
-          .innerJoinAndSelect('timePieces.targetId', 'target', 'target.userId = :userId', {
+          .innerJoinAndSelect('timePieces.target', 'target', 'target.user = :userId', {
             userId: user_id,
           }),
       }
@@ -231,7 +231,7 @@ export class Db {
         queryBuilder: getConnection()
           .getRepository(TimePieceEntity)
           .createQueryBuilder('timePieces')
-          .where('timePieces.targetId = :targetId', { targetId: target_id }),
+          .where('timePieces.target = :targetId', { targetId: target_id }),
       }
     );
   }
@@ -300,7 +300,7 @@ export class Db {
     return (
       await getRepository(TimePieceEntity)
         .createQueryBuilder('timePiece')
-        .where('timePiece.targetId = :targetId', { targetId: id })
+        .where('timePiece.target = :targetId', { targetId: id })
         .andWhere('timePiece.start >= :start', {
           start: moment().startOf('days').toDate(),
         })
