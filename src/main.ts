@@ -110,4 +110,4 @@ async function start(): Promise<string> {
   return token;
 }
 
-start().then((token) => console.log(`Server started with token ${token}`));
+start().then((token) => console.log(`Server started with token "${token}"`));

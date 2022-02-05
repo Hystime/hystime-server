@@ -175,7 +175,11 @@ export interface FindOptions<OrderField = string> {
 /**
  * The pagination options object.
  */
-export interface PaginateOptions<Entity extends Object, OrderField = string> {
+export interface PaginateOptions<
+  Entity extends Object,
+  OrderField = string,
+  ProcessResult = Entity
+> {
   /**
    * The name of the entity type.
    */
@@ -200,6 +204,10 @@ export interface PaginateOptions<Entity extends Object, OrderField = string> {
    * The TypeORM repository.
    */
   repository?: Repository<Entity>;
+  /**
+   * Post-process result.
+   */
+  postProcess?: (result: Entity) => ProcessResult;
 }
 
 /**
@@ -207,10 +215,10 @@ export interface PaginateOptions<Entity extends Object, OrderField = string> {
  * @param findOptions The user-defined find options.
  * @param options The pagination options.
  */
-export async function paginate<Entity extends ObjectLiteral, OrderField>(
+export async function paginate<Entity extends ObjectLiteral, OrderField, ProcessResult = Entity>(
   findOptions: FindOptions<OrderField>,
-  options: PaginateOptions<Entity, OrderField>
-): Promise<Connection<Entity>> {
+  options: PaginateOptions<Entity, OrderField, ProcessResult>
+): Promise<Connection<ProcessResult>> {
   // If no cursor is provided, start at the beginning
   let skip = 0;
   let decodedCursor: Cursor | undefined = undefined;
@@ -259,15 +267,20 @@ export async function paginate<Entity extends ObjectLiteral, OrderField>(
     }
   }
   // Convert the nodes into edges
-  const edges: Edge<Entity>[] = [];
+  const edges: Edge<ProcessResult>[] = [];
   // Exclude the first and last results
   for (
     let i = findOptions.after ? 1 : 0;
     i < (results.length < dbTake ? results.length : results.length - 1);
     i += 1
   ) {
+    let value: any = results[i];
+    // If a post-processor is provided, use it to process the result
+    if (options.postProcess) {
+      value = options.postProcess(value);
+    }
     edges.push({
-      node: results[i],
+      node: value,
       cursor: encodeCursor(results[i].id, options.type, i + skip),
     });
   }

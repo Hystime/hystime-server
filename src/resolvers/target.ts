@@ -1,20 +1,5 @@
-import { TargetResolvers, TimePieceResolvers } from '../generated/types';
+import { TargetResolvers } from '../generated/types';
 import { Db } from '../db/db';
-
-export const TimePiece: TimePieceResolvers = {
-  id: async (parent) => {
-    return parent.id;
-  },
-  start: async (parent) => {
-    return parent.start;
-  },
-  duration: async (parent) => {
-    return parent.duration;
-  },
-  type: async (parent) => {
-    return parent.type;
-  },
-};
 
 export const Target: TargetResolvers = {
   id: async (parent) => {
