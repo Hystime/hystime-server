@@ -4802,6 +4802,7 @@ __metadata:
     nanoid: ^3.1.30
     opaqueid: ^1.2.0
     prettier: ^2.5.1
+    run-script-webpack-plugin: ^0.0.11
     source-map-support: ^0.5.21
     ts-loader: ^9.2.6
     typeorm: ^0.2.41
@@ -7219,6 +7220,13 @@ __metadata:
   dependencies:
     queue-microtask: ^1.2.2
   checksum: cb4f97ad25a75ebc11a8ef4e33bb962f8af8516bb2001082ceabd8902e15b98f4b84b4f8a9b222e5d57fc3bd1379c483886ed4619367a7680dad65316993021d
+  languageName: node
+  linkType: hard
+
+"run-script-webpack-plugin@npm:^0.0.11":
+  version: 0.0.11
+  resolution: "run-script-webpack-plugin@npm:0.0.11"
+  checksum: 662220ac369df0c881c55b335dc79305e10c7390a7a307623a5f2a664ced3238a0551d935bd5698a3370fcda9e821166b55c854d28db580f5c88aa16fcf51a47
   languageName: node
   linkType: hard
 

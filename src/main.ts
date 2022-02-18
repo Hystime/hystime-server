@@ -1,5 +1,5 @@
 import { ApolloServer, AuthenticationError } from 'apollo-server';
-import { ConnectionOptions, createConnection } from 'typeorm';
+import { ConnectionOptions, createConnection, getConnection } from 'typeorm';
 import { makeExecutableSchema } from '@graphql-tools/schema';
 import sourceMapSupport from 'source-map-support';
 import { nanoid } from 'nanoid';
@@ -106,6 +106,22 @@ async function start(): Promise<string> {
   });
 
   console.log(`Server ready at ${serverUrl(serverInfo)}. `);
+
+  if (module.hot) {
+    module.hot.accept();
+    module.hot.dispose(() => {
+      getConnection()
+        .close()
+        .then(() => {
+          console.warn('Connection closed');
+        })
+        .then(() => {
+          server.stop();
+          console.warn('Server stopped');
+        });
+    });
+  }
+
   return token;
 }
 
