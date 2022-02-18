@@ -27,9 +27,11 @@ export function isDebug(): boolean {
 }
 
 export function endToStart(end: Date, days: number): Date {
-  return moment(end)
-    .subtract(days - 1, 'days')
-    .toDate();
+  return moment(end).subtract(days, 'days').startOf('day').toDate();
+}
+
+export function todayEnd(): Date {
+  return moment().endOf('day').toDate();
 }
 
 export function serverUrl(info: ServerInfo): string {

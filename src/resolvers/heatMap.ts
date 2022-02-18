@@ -1,5 +1,5 @@
 import { HeatMap as HeatMapType, HeatMapResolvers, TimePiece } from '../generated/types';
-import { endToStart } from '../utils/utils';
+import { endToStart, todayEnd } from '../utils/utils';
 import { daysBetween } from '../utils/date';
 
 export const HeatMap: HeatMapResolvers = {
@@ -14,7 +14,10 @@ export const HeatMap: HeatMapResolvers = {
   },
 };
 
-export function parseHeatMapFromTimePieces(timePieces: TimePiece[], end: Date): HeatMapType {
+export function parseHeatMapFromTimePieces(
+  timePieces: TimePiece[],
+  end: Date = todayEnd()
+): HeatMapType {
   const data = new Array(365).fill(0);
   const start = endToStart(end, 365);
   timePieces.forEach((tp) => {

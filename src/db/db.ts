@@ -18,6 +18,7 @@ import { TargetEntity } from '../entities/target';
 import { OrderDirection, paginate } from '../utils/pagination';
 import moment from 'moment';
 import { DbUtils } from './utils';
+import { todayEnd } from '../utils/utils';
 
 export class Db {
   public static async getUser(username: string): Promise<User> {
@@ -235,7 +236,7 @@ export class Db {
   public static async getUserTimePiecesInDays(
     user_id: string,
     days = 7,
-    end = new Date()
+    end = todayEnd()
   ): Promise<TimePiece[]> {
     return (
       await getConnection()
@@ -260,7 +261,7 @@ export class Db {
   public static async getTargetTimePiecesInDays(
     target_id: string,
     days = 7,
-    end = new Date()
+    end = todayEnd()
   ): Promise<TimePiece[]> {
     return (
       await getConnection()

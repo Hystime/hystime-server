@@ -45,7 +45,7 @@ type User{
     timePieces(first: Int!, after: String): TimePieceConnection!
 
     """Generate heatMap"""
-    heatMap(end: Date!): HeatMap!
+    heatMap(end: Date): HeatMap!
 }
 
 """One Target"""
@@ -82,7 +82,7 @@ type Target{
     todayPomodoroCount: Int!
 
     """Generate HeatMap"""
-    heatMap(end: Date!): HeatMap!
+    heatMap(end: Date): HeatMap!
 }
 
 type HeatMap{
