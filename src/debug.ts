@@ -1,5 +1,4 @@
-import * as fs from 'fs';
-import { isDebug } from './utils';
+import { isDebug } from './utils/utils';
 import { Db } from './db/db';
 
 import * as faker from 'faker';
@@ -50,7 +49,7 @@ export async function createDebugData(): Promise<void> {
   }
 
   targets.forEach((id) => {
-    let i = 100;
+    let i = 1000;
     while (i--) {
       try {
         Db.createTimePiece(id, {
@@ -59,13 +58,13 @@ export async function createDebugData(): Promise<void> {
             max: 60 * 60 * 2,
           }),
           type: faker.helpers.randomize([TimePieceType.Normal, TimePieceType.Pomodoro]),
-          start: faker.date.recent(14),
+          start: faker.date.recent(365),
         });
       } catch (e: any) {
         console.error(e);
         i++;
       }
     }
-    console.info(`Create 100 timepieces for ${id}`);
+    console.info(`Create 1000 timepieces for ${id}`);
   });
 }

@@ -1,5 +1,6 @@
 import { TargetResolvers } from '../generated/types';
 import { Db } from '../db/db';
+import { parseHeatMapFromTimePieces } from './heatMap';
 
 export const Target: TargetResolvers = {
   id: async (parent) => {
@@ -24,12 +25,16 @@ export const Target: TargetResolvers = {
     return Db.getTargetTimePieces(id, first, after);
   },
   lastWeekTimePieces: async ({ id }) => {
-    return Db.getTargetLastWeekTimePieces(id);
+    return Db.getTargetTimePiecesInDays(id);
   },
   pomodoroCount: async ({ id }) => {
     return Db.getTargetPomodoroCount(id);
   },
   todayPomodoroCount: async ({ id }) => {
     return Db.getTargetTodayPomodoroCount(id);
+  },
+  heatMap: async ({ id }, { end }) => {
+    const timePieces = await Db.getTargetTimePiecesInDays(id, 365, end);
+    return parseHeatMapFromTimePieces(timePieces, end);
   },
 };

@@ -9,9 +9,8 @@ import resolver from './resolvers';
 import typedefs from './typedefs';
 import entities from './entities';
 
-import { fileExist, isDebug } from './utils';
+import { fileExist, isDebug, serverUrl } from './utils/utils';
 import { createDebugData } from './debug';
-import { serverUrl } from './entities/util';
 
 sourceMapSupport.install({
   environment: 'node',

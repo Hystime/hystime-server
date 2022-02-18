@@ -13,7 +13,7 @@ import {
 import { TargetEntity } from '../entities/target';
 import { TimePieceEntity } from '../entities/timePiece';
 import { EntityTarget, FindOneOptions, getConnection, getRepository, UpdateResult } from 'typeorm';
-import { assertType } from '../utils';
+import { assertType } from '../utils/utils';
 
 export class DbUtils {
   // entity to graphql model
@@ -36,6 +36,7 @@ export class DbUtils {
         target: null,
         lastWeekTimePieces: null,
         timePieces: null,
+        heatMap: null,
       };
     }
 
@@ -51,6 +52,7 @@ export class DbUtils {
         pomodoroCount: null,
         todayPomodoroCount: null,
         todayTimeSpent: null,
+        heatMap: null,
       };
     }
 

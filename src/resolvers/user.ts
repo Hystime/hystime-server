@@ -1,5 +1,6 @@
 import { UserResolvers } from '../generated/types';
 import { Db } from '../db/db';
+import { parseHeatMapFromTimePieces } from './heatMap';
 
 export const User: UserResolvers = {
   id: async (parent) => {
@@ -18,7 +19,7 @@ export const User: UserResolvers = {
     return parent.targets;
   },
   lastWeekTimePieces: async ({ id }) => {
-    return Db.getUserLastWeekTimePieces(id);
+    return Db.getUserTimePiecesInDays(id);
   },
   pomodoroCount: async ({ id }) => {
     return Db.getUserPomodoroCount(id);
@@ -34,5 +35,9 @@ export const User: UserResolvers = {
   },
   timePieces: async ({ id }, { first, after }) => {
     return Db.getUserTimepieces(id, first, after);
+  },
+  heatMap: async ({ id }, { end }) => {
+    const timePieces = await Db.getUserTimePiecesInDays(id, 365, end);
+    return parseHeatMapFromTimePieces(timePieces, end);
   },
 };

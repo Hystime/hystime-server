@@ -43,6 +43,9 @@ type User{
 
     """Consumption time periods"""
     timePieces(first: Int!, after: String): TimePieceConnection!
+
+    """Generate heatMap"""
+    heatMap(end: Date!): HeatMap!
 }
 
 """One Target"""
@@ -77,6 +80,15 @@ type Target{
 
     """Today pomodoro count"""
     todayPomodoroCount: Int!
+
+    """Generate HeatMap"""
+    heatMap(end: Date!): HeatMap!
+}
+
+type HeatMap{
+    start: Date!
+    end: Date!
+    data: [Int!]!
 }
 
 type TimePieceEdge {

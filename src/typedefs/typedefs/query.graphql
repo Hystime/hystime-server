@@ -3,5 +3,5 @@ type Query{
     test: Boolean!
 
     """Try to find one user"""
-    user(username:String!):User
+    user(username:String!):User!
 }

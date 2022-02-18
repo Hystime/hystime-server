@@ -232,7 +232,11 @@ export class Db {
     );
   }
 
-  public static async getUserLastWeekTimePieces(user_id: string): Promise<TimePiece[]> {
+  public static async getUserTimePiecesInDays(
+    user_id: string,
+    days = 7,
+    end = new Date()
+  ): Promise<TimePiece[]> {
     return (
       await getConnection()
         .getRepository(TimePieceEntity)
@@ -241,20 +245,35 @@ export class Db {
           userId: user_id,
         })
         .where('timePiece.start >= :start', {
-          start: moment().subtract(6, 'days').startOf('days').toDate(),
+          start: moment(end)
+            .subtract(days - 1, 'days')
+            .toDate(),
         })
+        .andWhere('timePiece.start <= :end', {
+          end: moment(end).endOf('day').toDate(),
+        })
+        .orderBy('timePiece.start', 'DESC')
         .getMany()
     ).map((timePiece) => DbUtils.eTGM.timePiece(timePiece));
   }
 
-  public static async getTargetLastWeekTimePieces(target_id: string): Promise<TimePiece[]> {
+  public static async getTargetTimePiecesInDays(
+    target_id: string,
+    days = 7,
+    end = new Date()
+  ): Promise<TimePiece[]> {
     return (
       await getConnection()
         .getRepository(TimePieceEntity)
         .createQueryBuilder('timePiece')
         .where('timePiece.target = :targetId', { targetId: target_id })
         .andWhere('timePiece.start >= :start', {
-          start: moment().subtract(6, 'days').startOf('days').toDate(),
+          start: moment(end)
+            .subtract(days - 1, 'days')
+            .toDate(),
+        })
+        .andWhere('timePiece.start <= :end', {
+          end: moment(end).endOf('day').toDate(),
         })
         .orderBy('timePiece.start', 'DESC')
         .getMany()
