@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-var-requires */
 const { merge } = require('webpack-merge');
 const nodeExternals = require('webpack-node-externals');
 const common = require('./webpack.common.js');
