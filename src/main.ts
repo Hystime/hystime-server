@@ -18,11 +18,17 @@ sourceMapSupport.install({
   hookRequire: isDebug(),
 });
 
-async function start(): Promise<string> {
+interface IServer {
+  server: ApolloServer;
+  connection: ConnectionOptions;
+  token: string;
+}
+
+function generate(): IServer {
   const tokenPath = '.token';
   let token: string;
 
-  const tokenExist = await fileExist(tokenPath);
+  const tokenExist = fileExist(tokenPath);
 
   if (tokenExist) {
     token = fs.readFileSync(tokenPath).toString().trim();
@@ -73,10 +79,6 @@ async function start(): Promise<string> {
     };
   }
 
-  await createConnection(dbConfig);
-
-  await createDebugData();
-
   const schema = makeExecutableSchema({
     typeDefs: typedefs,
     resolvers: resolver,
@@ -90,7 +92,7 @@ async function start(): Promise<string> {
         if (userToken !== token) throw new AuthenticationError('Incorrect access token');
       } else {
         if (userToken !== token) {
-          console.log(`error token ${userToken} not same as ${token}`);
+          console.log(`error token "${userToken}" not same as ${token}`);
         }
       }
     },
@@ -100,29 +102,70 @@ async function start(): Promise<string> {
     },
     introspection: true,
   });
-  const serverInfo = await server.listen({
-    port: process.env['PORT'] || 4000,
-    host: process.env['HOST'] || '0.0.0.0',
-  });
-
-  console.log(`Server ready at ${serverUrl(serverInfo)}. `);
 
   if (module.hot) {
     module.hot.accept();
     module.hot.dispose(() => {
+      server.stop().then(() => console.error('Server stopped'));
       getConnection()
         .close()
         .then(() => {
-          console.warn('Connection closed');
-        })
-        .then(() => {
-          server.stop();
-          console.warn('Server stopped');
+          console.error('Connection closed');
         });
     });
   }
 
-  return token;
+  return {
+    server,
+    connection: dbConfig,
+    token,
+  };
 }
 
-start().then((token) => console.log(`Server started with token "${token}"`));
+const iServer = generate();
+
+if (process.env.VERCEL === undefined) {
+  if (isDebug()) {
+    if (module.hot.status() === 'apply') {
+      setTimeout(start, 1000);
+    } else {
+      start();
+    }
+  }
+
+  function start(): void {
+    const { server, connection, token } = iServer;
+    server
+      .listen({
+        port: process.env['PORT'] || 4000,
+        host: process.env['HOST'] || '0.0.0.0',
+      })
+      .then((serverInfo) => {
+        console.log(`Server ready at ${serverUrl(serverInfo)}`);
+        console.log(`Token: ${token}`);
+        createConnection(connection)
+          .then(() => {
+            console.log('Database connected');
+            createDebugData();
+          })
+          .catch((err) => {
+            console.error('Database connection error: ', err);
+            process.exit(1);
+          });
+      });
+  }
+} else {
+  const { connection, token } = iServer;
+  console.log(`Server ready at ${process.env.VERCEL_URL}`);
+  console.log(`Token: ${token}`);
+  createConnection(connection)
+    .then(() => {
+      console.warn('Database connected');
+    })
+    .catch((err) => {
+      console.error('Database connection error: ', err);
+      process.exit(1);
+    });
+}
+
+module.exports = iServer;

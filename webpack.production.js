@@ -3,7 +3,6 @@ const common = require('./webpack.common.js');
 const path = require('path');
 const nodeExternals = require('webpack-node-externals');
 
-// noinspection JSCheckFunctionSignatures
 module.exports = merge(common, {
   devtool: 'source-map',
   module: {

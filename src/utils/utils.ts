@@ -13,9 +13,9 @@ export function assertNonNull<T>(obj: T): asserts obj is NonNullable<T> {
   }
 }
 
-export async function fileExist(path: string): Promise<boolean> {
+export function fileExist(path: string): boolean {
   try {
-    await fs.promises.access(path, fs.constants.F_OK | fs.constants.R_OK | fs.constants.W_OK);
+    fs.accessSync(path, fs.constants.F_OK | fs.constants.R_OK | fs.constants.W_OK);
     return true;
   } catch (err) {
     return false;
