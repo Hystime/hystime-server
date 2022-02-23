@@ -91,3 +91,5 @@ dist
 .debug
 graphql.schema.json
 src/generated
+
+.vercel
