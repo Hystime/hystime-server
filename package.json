@@ -7,7 +7,6 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "webpack --config webpack.production.js",
     "dev": "webpack --config webpack.development.js",
-    "vercel": "yarn run generate",
     "start": "node dist/server",
     "lint": "eslint . --ext .ts",
     "fmt": "eslint . --ext .ts --fix",
