@@ -1,7 +1,0 @@
-type Query{
-    """Test Connection"""
-    test: Boolean!
-
-    """Try to find one user"""
-    user(username:String!):User!
-}

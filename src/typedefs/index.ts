@@ -1,9 +1,9 @@
-import typeDefs from './typedefs/typeDefs.graphql';
-import inputs from './typedefs/inputs.graphql';
-import query from './typedefs/query.graphql';
-import mutations from './typedefs/mutation.graphql';
-import pagination from './typedefs/pagination.graphql';
+import typeDefs from './typedefs/typeDefs';
+import inputs from './typedefs/inputs';
+import mutation from './typedefs/mutation';
+import query from './typedefs/query';
+import pagination from './typedefs/pagination';
 import { typeDefs as scalars } from 'graphql-scalars';
 import gql from 'graphql-tag';
 
-export default gql([typeDefs, query, inputs, mutations, pagination, ...scalars].join('\n'));
+export default [gql(scalars.join('\n')), typeDefs, inputs, mutation, query, pagination];
