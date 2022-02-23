@@ -6,5 +6,10 @@ module.exports = {
     extensions: ['.ts', '.js'],
   },
   target: 'node',
-  plugins: [new CleanWebpackPlugin(), new WebpackBarPlugin()],
+  plugins: [
+    new CleanWebpackPlugin({
+      cleanAfterEveryBuildPatterns: ['!.keep'],
+    }),
+    new WebpackBarPlugin(),
+  ],
 };

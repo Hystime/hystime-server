@@ -130,6 +130,8 @@ if (isDebug()) {
   } else {
     start();
   }
+} else {
+  start();
 }
 
 function start(): void {

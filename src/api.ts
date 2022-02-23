@@ -1,5 +1,5 @@
 import { createConnection } from 'typeorm';
-import { generate } from '../src/main';
+import { generate } from './main';
 
 const iServer = generate();
 const { server, connection, token } = iServer;
