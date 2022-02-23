@@ -7,7 +7,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "webpack --config webpack.production.js",
     "dev": "webpack --config webpack.development.js",
-    "vercel": "yarn run generate && webpack --config webpack.vercel.js",
+    "vercel": "yarn run generate",
     "start": "node dist/server",
     "lint": "eslint . --ext .ts",
     "fmt": "eslint . --ext .ts --fix",
@@ -47,7 +47,6 @@
     "vercel": "^24.0.0",
     "webpack": "^5.65.0",
     "webpack-cli": "^4.9.1",
-    "webpack-graphql-loader": "^1.0.2",
     "webpack-merge": "^5.8.0",
     "webpack-node-externals": "^3.0.0",
     "webpackbar": "^5.0.2"
