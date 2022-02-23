@@ -7,7 +7,7 @@ module.exports = merge(common, {
   devtool: 'source-map',
   output: {
     filename: 'server.js',
-    path: path.resolve(__dirname, 'dist'),
+    path: path.resolve(__dirname, 'api'),
   },
   module: {
     rules: [
