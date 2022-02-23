@@ -126,7 +126,7 @@ const iServer = generate();
 
 if (process.env.VERCEL === undefined) {
   if (isDebug()) {
-    if (module.hot.status() === 'apply') {
+    if (module.hot && module.hot.status() === 'apply') {
       setTimeout(start, 1000);
     } else {
       start();
@@ -146,7 +146,9 @@ if (process.env.VERCEL === undefined) {
         createConnection(connection)
           .then(() => {
             console.log('Database connected');
-            createDebugData();
+            createDebugData().then(() => {
+              console.log('Debug data created');
+            });
           })
           .catch((err) => {
             console.error('Database connection error: ', err);
@@ -168,4 +170,4 @@ if (process.env.VERCEL === undefined) {
     });
 }
 
-module.exports = iServer;
+module.exports = iServer.server;
