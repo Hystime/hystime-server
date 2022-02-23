@@ -4,11 +4,16 @@ const path = require('path');
 const nodeExternals = require('webpack-node-externals');
 
 module.exports = merge(common, {
-  devtool: 'source-map',
+  devtool: 'inline-source-map',
   output: {
-    filename: 'server.js',
+    filename: 'index.js',
     path: path.resolve(__dirname, 'api'),
+    library: {
+      name: 'server',
+      type: 'umd',
+    },
   },
+  entry: [path.join(__dirname, 'src/api.ts')],
   module: {
     rules: [
       {

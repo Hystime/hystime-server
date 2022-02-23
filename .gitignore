@@ -93,3 +93,6 @@ graphql.schema.json
 src/generated
 
 .vercel
+
+src/**/*.js
+/api

@@ -5,6 +5,7 @@ const nodeExternals = require('webpack-node-externals');
 
 module.exports = merge(common, {
   devtool: 'source-map',
+  entry: [path.join(__dirname, 'src/main.ts')],
   output: {
     filename: 'server.js',
     path: path.resolve(__dirname, 'dist'),

@@ -24,6 +24,5 @@ module.exports = {
     extensions: ['.ts', '.js'],
   },
   target: 'node',
-  entry: [path.join(__dirname, 'src/main.ts')],
   plugins: [new CleanWebpackPlugin(), new WebpackBarPlugin()],
 };

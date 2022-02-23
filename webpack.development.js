@@ -20,7 +20,7 @@ module.exports = merge(common, {
       },
     ],
   },
-  entry: ['webpack/hot/poll?1000'],
+  entry: [path.join(__dirname, 'src/main.ts'), 'webpack/hot/poll?1000'],
   externals: [
     nodeExternals({
       allowlist: ['webpack/hot/poll?1000'],

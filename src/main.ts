@@ -24,7 +24,7 @@ interface IServer {
   token: string;
 }
 
-function generate(): IServer {
+export function generate(): IServer {
   const tokenPath = '.token';
   let token: string;
 
@@ -124,50 +124,34 @@ function generate(): IServer {
 
 const iServer = generate();
 
-if (process.env.VERCEL === undefined) {
-  if (isDebug()) {
-    if (module.hot && module.hot.status() === 'apply') {
-      setTimeout(start, 1000);
-    } else {
-      start();
-    }
+if (isDebug()) {
+  if (module.hot && module.hot.status() === 'apply') {
+    setTimeout(start, 1000);
+  } else {
+    start();
   }
-
-  function start(): void {
-    const { server, connection, token } = iServer;
-    server
-      .listen({
-        port: process.env['PORT'] || 4000,
-        host: process.env['HOST'] || '0.0.0.0',
-      })
-      .then((serverInfo) => {
-        console.log(`Server ready at ${serverUrl(serverInfo)}`);
-        console.log(`Token: ${token}`);
-        createConnection(connection)
-          .then(() => {
-            console.log('Database connected');
-            createDebugData().then(() => {
-              console.log('Debug data created');
-            });
-          })
-          .catch((err) => {
-            console.error('Database connection error: ', err);
-            process.exit(1);
-          });
-      });
-  }
-} else {
-  const { connection, token } = iServer;
-  console.log(`Server ready at ${process.env.VERCEL_URL}`);
-  console.log(`Token: ${token}`);
-  createConnection(connection)
-    .then(() => {
-      console.warn('Database connected');
-    })
-    .catch((err) => {
-      console.error('Database connection error: ', err);
-      process.exit(1);
-    });
 }
 
-module.exports = iServer.server;
+function start(): void {
+  const { server, connection, token } = iServer;
+  server
+    .listen({
+      port: process.env['PORT'] || 4000,
+      host: process.env['HOST'] || '0.0.0.0',
+    })
+    .then((serverInfo) => {
+      console.log(`Server ready at ${serverUrl(serverInfo)}`);
+      console.log(`Token: ${token}`);
+      createConnection(connection)
+        .then(() => {
+          console.log('Database connected');
+          createDebugData().then(() => {
+            console.log('Debug data created');
+          });
+        })
+        .catch((err) => {
+          console.error('Database connection error: ', err);
+          process.exit(1);
+        });
+    });
+}
