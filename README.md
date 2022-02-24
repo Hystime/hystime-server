@@ -10,6 +10,7 @@ DB_PORT=3306
 DB_USERNAME (required)
 DB_USERPWD (required)
 DB_NAME (required)
+
 TOKEN (nanoid(8))
 
 HOST=0.0.0.0
