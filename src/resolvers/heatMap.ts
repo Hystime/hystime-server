@@ -18,7 +18,7 @@ export function parseHeatMapFromTimePieces(
   timePieces: TimePiece[],
   end: Date = todayEnd()
 ): HeatMapType {
-  const data = new Array(365).fill(0);
+  const data = new Array(366).fill(0);
   const start = endToStart(end, 365);
   timePieces.forEach((tp) => {
     const day = daysBetween(start, tp.start);
