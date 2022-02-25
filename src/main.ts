@@ -148,7 +148,9 @@ function start(): void {
         .then(() => {
           console.log('Database connected');
           createDebugData().then(() => {
-            console.log('Debug data created');
+            if (isDebug()) {
+              console.warn('Debug data maintained');
+            }
           });
         })
         .catch((err) => {
