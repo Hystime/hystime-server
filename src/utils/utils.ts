@@ -56,6 +56,16 @@ export function serverUrl(info: ServerInfo): string {
     if (host === '0.0.0.0' || host === '::') {
       const ips = getIPAddress();
       const local_ips = ips.filter((ip) => ip.startsWith('192.168') || ip.startsWith('172.16'));
+      local_ips.sort((a, b) => {
+        const as = a.split('.').map((s) => parseInt(s, 10));
+        const bs = b.split('.').map((s) => parseInt(s, 10));
+        for (let i = 0; i < 4; i++) {
+          if (as[i] !== bs[i]) {
+            return as[i] - bs[i];
+          }
+        }
+        return 0;
+      });
       if (local_ips.length > 0) {
         return url.replace(host, local_ips[0]);
       }
